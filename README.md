@@ -1,4 +1,4 @@
-# cpp-fullstack-iteam-2sem
+# C++ Full Stack — ITEAM (2º semestre)
 Ambiente de aprendizado de pequenos desafios utilizando a linguagem de programação C++.
 
 **Curso de Capacitação em Desenvolvimento Full Stack – ITEAM · Módulo 08 – Linguagem de Programação C++**

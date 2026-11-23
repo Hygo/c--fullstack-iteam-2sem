@@ -1,6 +1,6 @@
 # Como obter e entregar as atividades
 
-O repositório oficial do curso (`Hygo/cpp-fullstack-iteam-2sem`) é o **material do professor** e é somente para leitura. As atividades **não** são feitas nele e **não** se envia Pull Request para lá: cada aluno cria a **sua própria cópia** e trabalha nela. O projeto final é feito em equipe, em **uma cópia por equipe** (seção 7).
+O repositório oficial do curso (`Hygo/c--fullstack-iteam-2sem`) é o **material do professor** e é somente para leitura. As atividades **não** são feitas nele e **não** se envia Pull Request para lá: cada aluno cria a **sua própria cópia** e trabalha nela. O projeto final é feito em equipe, em **uma cópia por equipe** (seção 7).
 
 > Pull Requests abertos no repositório oficial são fechados automaticamente.
 
@@ -13,7 +13,7 @@ O repositório oficial do curso (`Hygo/cpp-fullstack-iteam-2sem`) é o **materia
 
 ## 1. Criar a sua cópia (só uma vez)
 
-1. Abra https://github.com/Hygo/cpp-fullstack-iteam-2sem
+1. Abra https://github.com/Hygo/c--fullstack-iteam-2sem
 2. Clique em **Use this template** → **Create a new repository**.
 3. Em *Owner*, escolha a sua conta. Em *Repository name*, use `cpp-fullstack-seunome`.
 4. Escolha a visibilidade:
@@ -39,7 +39,7 @@ A partir daqui, `origin` é a **sua cópia** (onde você envia o seu trabalho).
 Isso serve apenas para **baixar** os conteúdos novos:
 
 ```bash
-git remote add professor https://github.com/Hygo/cpp-fullstack-iteam-2sem.git
+git remote add professor https://github.com/Hygo/c--fullstack-iteam-2sem.git
 git remote set-url --push professor DESATIVADO
 git remote -v
 ```

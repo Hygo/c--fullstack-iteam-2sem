@@ -1,6 +1,6 @@
 # Política de contribuição
 
-O repositório oficial (`Hygo/cpp-fullstack-iteam-2sem`) é o **material do professor** do Curso de Capacitação em Desenvolvimento Full Stack (Módulo 08 – Linguagem de Programação C++) e é mantido apenas por ele.
+O repositório oficial (`Hygo/c--fullstack-iteam-2sem`) é o **material do professor** do Curso de Capacitação em Desenvolvimento Full Stack (Módulo 08 – Linguagem de Programação C++) e é mantido apenas por ele.
 
 **Pull Requests de alunos não são aceitos** no repositório oficial e serão fechados automaticamente. Isso protege os arquivos originais do curso.
 
