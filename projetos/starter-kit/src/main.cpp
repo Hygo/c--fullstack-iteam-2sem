@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
                   << config.banco << std::endl;
     } catch (const std::exception& erro) {
         std::cerr << "AVISO: " << erro.what() << '\n'
-                  << "  -> O XAMPP (MySQL) esta ligado? O schema.sql foi importado?\n";
+                  << "  -> O container do banco esta no ar? Rode: docker compose up -d --wait\n";
     }
 
     httplib::Server servidor;

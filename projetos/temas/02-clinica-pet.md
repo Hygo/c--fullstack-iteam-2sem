@@ -31,6 +31,8 @@ Um sistema para uma clínica veterinária cadastrar os **pets** atendidos e os *
 
 ## Modelo de banco sugerido
 
+Copiem este SQL para o `schema.sql` do projeto (no lugar da tabela de exemplo, mas **mantendo** o `CREATE DATABASE`/`USE` do começo do arquivo) e apliquem com `docker compose down -v` e `docker compose up -d --wait`.
+
 ```sql
 CREATE TABLE IF NOT EXISTS tutores (
     id       INT UNSIGNED NOT NULL AUTO_INCREMENT,

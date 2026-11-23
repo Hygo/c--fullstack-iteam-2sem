@@ -24,7 +24,7 @@ O projeto vale **100 pontos** (nota de 0 a 10 = pontos ÷ 10) e representa **50%
 
 | Item | Pontos |
 |------|:------:|
-| `schema.sql` importa do zero, sem erros, e pode ser importado de novo sem quebrar (`IF NOT EXISTS`) | 5 |
+| O banco sobe do zero com `docker compose up -d --wait`, sem erros (o `schema.sql` roda sozinho), e o `docker compose down -v` seguido de novo `up` recria tudo | 5 |
 | Modelagem: chaves primárias e estrangeiras, tipos adequados, `NOT NULL`, `UNIQUE`/`CHECK` onde faz sentido | 7 |
 | **Todo SQL com parâmetros `?`**; nenhum valor concatenado no texto do SQL | 5 |
 | Dados de exemplo suficientes para demonstrar o sistema | 3 |
@@ -52,7 +52,7 @@ O projeto vale **100 pontos** (nota de 0 a 10 = pontos ÷ 10) e representa **50%
 | Item | Pontos |
 |------|:------:|
 | [`EQUIPE.md`](EQUIPE.md) completo (integrantes, tema, papéis, decisões) | 3 |
-| README da equipe: instalar, importar o banco, compilar, executar — reproduzível em outro computador | 4 |
+| README da equipe: instalar, subir o banco, compilar, executar — reproduzível em outro computador | 4 |
 | Tabela das rotas da API com exemplos de requisição/resposta | 3 |
 
 ### 6. Apresentação — 10 pontos

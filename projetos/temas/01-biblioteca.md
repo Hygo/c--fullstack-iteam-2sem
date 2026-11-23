@@ -30,6 +30,8 @@ Um sistema para a biblioteca de uma escola ou bairro cadastrar **livros** e seus
 
 ## Modelo de banco sugerido
 
+Copiem este SQL para o `schema.sql` do projeto (no lugar da tabela de exemplo, mas **mantendo** o `CREATE DATABASE`/`USE` do começo do arquivo) e apliquem com `docker compose down -v` e `docker compose up -d --wait`.
+
 Podem adaptar (e ampliar), mas mantenham a ideia: chaves, `NOT NULL`, `UNIQUE` e `CHECK` no banco **além** da validação na API.
 
 ```sql

@@ -7,7 +7,7 @@ Vamos instalar quatro coisas e testar tudo no final:
 | O quê | Para quê |
 |-------|----------|
 | **MSYS2 (UCRT64)** | compilador `g++` e a biblioteca para falar com o MariaDB |
-| **XAMPP** | servidor de banco de dados MariaDB (e o phpMyAdmin) |
+| **Docker Desktop** | roda o banco de dados MariaDB em um *container* (um comando sobe tudo) |
 | **Git** | versionamento (já instalado se você fez a seção 1 de [`COMO-OBTER-AS-ATIVIDADES.md`](../../COMO-OBTER-AS-ATIVIDADES.md)) |
 | **VS Code** | editor (opcional, mas é o que usamos no curso) |
 
@@ -49,22 +49,44 @@ Para compilar pelo terminal do VS Code (PowerShell) e pelo `cmd`, acrescente `C:
 
 Isso também coloca a `libmariadb.dll` no caminho, e é por isso que o `servidor.exe` consegue abrir fora do MSYS2.
 
-## 2. XAMPP (MariaDB)
+## 2. Docker Desktop (banco de dados MariaDB)
 
-1. Baixe em <https://www.apachefriends.org> e instale. Basta marcar **MySQL** (que no XAMPP é o MariaDB) e **phpMyAdmin** (o phpMyAdmin precisa do **Apache**, então deixe o Apache marcado também).
-2. Abra o **XAMPP Control Panel** e clique em **Start** em *MySQL* (e em *Apache*, se for usar o phpMyAdmin).
-3. Confira: abra <http://localhost/phpmyadmin>. Deve aparecer a lista de bancos de dados.
+O banco de dados roda dentro de um **container** Docker: uma "caixinha" isolada, com o MariaDB já configurado, que sobe com um único comando e é **igual em todos os computadores** (e no computador do professor, na correção). Não é preciso instalar o servidor MariaDB no Windows.
 
-> **Por que instalamos a biblioteca do MariaDB no MSYS2 se o XAMPP já tem o MariaDB?** O XAMPP traz o **servidor**. Para o nosso programa em C++ *conversar* com o servidor, precisamos dos arquivos de desenvolvimento do **cliente** (`mysql.h` e `libmariadb`), que o XAMPP não garante ter. A biblioteca do MSYS2 se conecta ao servidor do XAMPP normalmente, pela porta 3306.
+**Requisitos do computador:** Windows 10 (22H2) ou Windows 11, 64 bits, com a **virtualização ligada na BIOS/UEFI** (o Docker usa o WSL 2 do Windows). Para instalar pode ser preciso um usuário **administrador**; no laboratório, peça ao professor ou ao suporte.
 
-**A porta 3306 está ocupada?** Se o MySQL do XAMPP não iniciar, outro MySQL/MariaDB pode estar rodando. Pare o outro serviço ou mude a porta do XAMPP (*Config → my.ini*, `port=3307`) e informe ao projeto com a variável de ambiente `DB_PORTA=3307`.
+1. Baixe o **Docker Desktop** em <https://www.docker.com/products/docker-desktop/> e instale mantendo marcada a opção de usar o **WSL 2**. Reinicie o computador se o instalador pedir.
+2. Abra o **Docker Desktop**, aceite os termos e espere o ícone indicar que o *engine* está rodando (pode levar um minuto). Não é obrigatório criar conta para usar.
+3. Em um terminal (PowerShell, `cmd` ou MSYS2), confira:
+
+   ```bash
+   docker --version
+   docker compose version
+   ```
+
+4. **Baixe a imagem do banco agora** (é um download de algumas centenas de MB; é melhor fazer antes do dia 6, com a internet boa):
+
+   ```bash
+   docker pull mariadb:11.8
+   ```
+
+> **Por que instalamos a biblioteca do MariaDB no MSYS2 se o banco está no Docker?** O container traz o **servidor**. Para o nosso programa em C++ *conversar* com o servidor, precisamos do **cliente** (`mysql.h` e `libmariadb`), que fica no Windows, dentro do MSYS2. Eles se encontram pela porta 3306, aberta só para o seu computador.
+
+**Lembretes do dia a dia:** o **Docker Desktop precisa estar aberto** para o banco funcionar. O container está configurado para voltar sozinho quando o Docker abre, e os dados ficam guardados mesmo se você desligar o computador. Os comandos do banco estão no README do starter kit (seção *O banco de dados no Docker*).
 
 ## 3. Teste final: rodar o starter kit
 
-Dentro da cópia da equipe (já clonada):
+Dentro da cópia da equipe (já clonada), na pasta `projetos/starter-kit`:
 
-1. Importe o banco: abra <http://localhost/phpmyadmin> → aba **Importar** → escolha `projetos/starter-kit/schema.sql` → **Importar**. Deve aparecer o banco `projeto_iteam` com a tabela `recados`.
-2. Compile (escolha **um** dos dois jeitos):
+1. **Suba o banco:**
+
+   ```bash
+   docker compose up -d --wait
+   docker compose ps
+   ```
+
+   A primeira vez baixa a imagem (se você não fez o `docker pull`) e executa o `schema.sql` automaticamente. No `docker compose ps`, o serviço `db` deve aparecer como **healthy**.
+2. **Compile** (escolha **um** dos dois jeitos):
 
    | Onde | Comando |
    |------|---------|
@@ -72,14 +94,20 @@ Dentro da cópia da equipe (já clonada):
    | Terminal **MSYS2 UCRT64**, dentro de `projetos/starter-kit` | `./build.sh` |
 
    A primeira compilação demora (de 30 segundos a alguns minutos, dependendo do computador). É normal.
-3. Execute **dentro da pasta `starter-kit`**:
+3. **Execute**, dentro da pasta `starter-kit`:
 
    ```bash
    build/servidor.exe
    ```
 
+   A primeira linha deve ser `Banco OK: iteam@127.0.0.1:3306/projeto_iteam`.
 4. Abra <http://localhost:8080>. Se aparecer a tela de **Recados** com o registro "Bem-vindo", **o ambiente está pronto** ✅.
 5. Teste também <http://localhost:8080/api/saude/banco>: deve mostrar `{"banco":"ok"}`.
+6. **Ao terminar o teste**, pare o servidor (Ctrl+C) e **remova o banco de teste**, para ele não ocupar a porta 3306 quando for trabalhar na pasta da equipe:
+
+   ```bash
+   docker compose down -v
+   ```
 
 Quem terminar primeiro ajuda os colegas da equipe. Só siga para o guia 02 quando **os quatro** estiverem com a tela funcionando.
 
@@ -110,6 +138,18 @@ Se o `pacman` não conseguir instalar o `libmariadbclient`, ou a compilação re
 
 Se ainda assim não funcionar, **chame o professor** com a mensagem de erro completa (print da tela inteira).
 
+## 5.1. Plano B: sem Docker (banco instalado no Windows)
+
+Se o Docker **não puder ser instalado** no computador (virtualização desligada e sem acesso à BIOS, falta de permissão…), qualquer servidor MariaDB/MySQL na porta 3306 serve (por exemplo, o XAMPP). Crie o banco e o usuário que o projeto espera e importe o `schema.sql`:
+
+```sql
+CREATE DATABASE IF NOT EXISTS projeto_iteam CHARACTER SET utf8mb4;
+CREATE USER IF NOT EXISTS 'iteam'@'%' IDENTIFIED BY 'iteam123';
+GRANT ALL ON projeto_iteam.* TO 'iteam'@'%';
+```
+
+Depois importe o `schema.sql` (no phpMyAdmin do XAMPP: aba **Importar**). Com isso o servidor em C++ funciona sem mudar nada. Avise o professor: **cada vez que o `schema.sql` mudar, é preciso importá-lo de novo à mão**, e o README da equipe deve dizer isso.
+
 ## 6. Problemas comuns
 
 | Sintoma | O que fazer |
@@ -119,7 +159,10 @@ Se ainda assim não funcionar, **chame o professor** com a mensagem de erro comp
 | `cannot find -lmariadb` | Mesma causa. No MSYS2, `pacman -S mingw-w64-ucrt-x86_64-libmariadbclient`. |
 | `undefined reference to 'WSAStartup'` (ou outros `__imp_...`) | Faltou `-lws2_32` na linha de comando. O `build.bat` e o `build.sh` já incluem; se compilar à mão, acrescente. |
 | `servidor.exe` fecha logo ou diz que falta `libmariadb.dll` | A DLL não está no `PATH`. Rode pelo terminal do MSYS2 UCRT64, ou copie `libmariadb.dll` para `build\`. |
-| `Can't connect to server on '127.0.0.1'` | O MySQL do XAMPP não está ligado (ou está em outra porta: `DB_PORTA`). |
-| `Access denied for user 'root'` | O XAMPP padrão não tem senha. Se alguém definiu uma, use `DB_SENHA`. |
-| `Unknown database 'projeto_iteam'` | Falta importar o `schema.sql`. |
-| Antivírus ou firewall bloqueia o `servidor.exe` | Permita o acesso em rede privada. O servidor só escuta em `127.0.0.1` (o próprio computador). |
+| `Can't connect to server on '127.0.0.1'` | O container do banco não está no ar: abra o Docker Desktop e rode `docker compose up -d --wait` na pasta do projeto (confira com `docker compose ps`). |
+| `error during connect` / `Cannot connect to the Docker daemon` | O Docker Desktop está fechado ou ainda iniciando. Abra-o e espere o *engine* ficar pronto. |
+| `Docker Desktop - WSL 2 ... virtualization` (o Docker não inicia) | Virtualização desligada na BIOS/UEFI, ou o WSL 2 não está instalado. Chame o professor/suporte; se não der, use o plano B (5.1). |
+| `port is already allocated` ao subir o banco | A porta 3306 está ocupada (outro MySQL, ou o banco de outra pasta). Rode `docker compose down` na outra pasta, ou use `DB_PORTA=3307`. |
+| `Access denied for user 'iteam'` | O banco foi criado com outra senha, ou o servidor está falando com outro MySQL na porta 3306. Zere o banco: `docker compose down -v` e `docker compose up -d --wait`. |
+| `Unknown database 'projeto_iteam'` ou tabela inexistente | O `schema.sql` não foi aplicado (ele só roda quando o banco é criado). Zere o banco: `docker compose down -v` e `docker compose up -d --wait`. |
+| Antivírus ou firewall bloqueia o `servidor.exe` ou o Docker | Permita o acesso em rede privada. O servidor só escuta em `127.0.0.1` (o próprio computador). |

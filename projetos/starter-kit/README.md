@@ -6,15 +6,16 @@ Um CRUD **completo e funcionando** (o recurso de exemplo se chama *recados*) par
 Navegador (public/index.html + app.js)
         │  fetch() com JSON
         ▼
-Servidor C++ (cpp-httplib)  ──►  rotas_*.cpp  ──►  *_repositorio.cpp  ──►  MariaDB (XAMPP)
+Servidor C++ (cpp-httplib)  ──►  rotas_*.cpp  ──►  *_repositorio.cpp  ──►  MariaDB (container Docker)
 ```
 
 ## Estrutura
 
 ```
 starter-kit/
+├── docker-compose.yml       sobe o banco MariaDB em um container Docker
 ├── build.sh / build.bat     compilam o servidor (build.sh só recompila o que mudou)
-├── schema.sql               cria o banco "projeto_iteam" e as tabelas
+├── schema.sql               cria as tabelas (o Docker executa este arquivo ao criar o banco)
 ├── libs/                    bibliotecas de terceiros (não precisa instalar nada além do MariaDB):
 │   ├── httplib.h            cpp-httplib (servidor HTTP)
 │   └── nlohmann/json.hpp    nlohmann/json (JSON)
@@ -34,16 +35,21 @@ starter-kit/
 
 ## Rodando pela primeira vez
 
-Pré-requisitos (compilador, XAMPP e a biblioteca do MariaDB): [`../guia/01-preparar-ambiente.md`](../guia/01-preparar-ambiente.md).
+Pré-requisitos (compilador, biblioteca do MariaDB e Docker): [`../guia/01-preparar-ambiente.md`](../guia/01-preparar-ambiente.md).
 
-1. **Ligue o MySQL no painel do XAMPP** (botão *Start* do MySQL).
-2. **Importe o `schema.sql`** — pelo phpMyAdmin (`http://localhost/phpmyadmin` → *Importar*) ou, no `cmd` (não no PowerShell), `C:\xampp\mysql\bin\mysql.exe -u root < schema.sql`.
-3. **Compile** (a primeira vez demora, pois a `httplib.h` é grande):
+1. **Suba o banco** (o Docker Desktop precisa estar aberto). Na pasta do starter kit:
+
+   ```bash
+   docker compose up -d --wait
+   ```
+
+   A primeira vez baixa a imagem do MariaDB (pode levar alguns minutos) e executa o `schema.sql` sozinho. Confira com `docker compose ps`: o serviço `db` deve aparecer como **healthy**.
+2. **Compile** (a primeira vez demora, pois a `httplib.h` é grande):
    - terminal do MSYS2 UCRT64: `./build.sh`
    - `cmd` ou PowerShell: `build.bat`
-4. **Execute, dentro da pasta do starter kit** (o servidor procura `./public` a partir dela):
+3. **Execute, dentro da pasta do starter kit** (o servidor procura `./public` a partir dela):
    - `./build/servidor.exe` (ou `./build.sh rodar`)
-5. Abra **http://localhost:8080** no navegador. Você deve ver a tela de *Recados* com um registro de boas-vindas.
+4. Abra **http://localhost:8080** no navegador. Você deve ver a tela de *Recados* com um registro de boas-vindas.
 
 Se algo falhar, veja a seção *Problemas comuns*, no fim deste arquivo.
 
@@ -80,7 +86,7 @@ curl -X DELETE http://localhost:8080/api/recados/2
 
 Siga sempre esta ordem; cada passo pode ser testado antes do próximo.
 
-1. **Tabela** — em `schema.sql`, crie a tabela do seu tema (veja o tema em [`../temas/`](../temas/)) e reimporte o arquivo.
+1. **Tabela** — em `schema.sql`, crie a tabela do seu tema (veja o tema em [`../temas/`](../temas/)) e **aplique de novo**: `docker compose down -v` e depois `docker compose up -d --wait` (o schema só roda quando o banco é criado).
 2. **Repositório** — copie `recado_repositorio.hpp/.cpp` para `livro_repositorio.*` (ou `pet_`, `produto_`) e ajuste o nome da classe, as colunas e os SQLs. **Todo SQL fica aqui.**
 3. **Rotas** — copie `rotas_recados.hpp/.cpp` para `rotas_livros.*` e ajuste os caminhos (`/api/livros`), a validação e as mensagens.
 4. **Registro** — em `main.cpp`, inclua o cabeçalho novo e chame `registrarRotasLivros(servidor, config);`.
@@ -92,20 +98,40 @@ Os guias [`03-json-e-validacao.md`](../guia/03-json-e-validacao.md), [`04-banco-
 
 ## Configuração (variáveis de ambiente)
 
-Os padrões servem para o XAMPP. Para mudar sem editar o código, defina antes de executar (no `cmd`: `set NOME=valor`; no MSYS2/bash: `export NOME=valor`):
+Os padrões servem para o banco do `docker-compose.yml`. Para mudar sem editar o código, defina antes de executar (no `cmd`: `set NOME=valor`; no MSYS2/bash: `export NOME=valor`):
 
 | Variável | Padrão | Para que serve |
 |----------|--------|----------------|
 | `DB_HOST` | `127.0.0.1` | endereço do MariaDB |
-| `DB_PORTA` | `3306` | porta do MariaDB |
-| `DB_USUARIO` | `root` | usuário |
-| `DB_SENHA` | *(vazia)* | senha |
+| `DB_PORTA` | `3306` | porta do MariaDB (o `docker-compose.yml` também lê esta variável) |
+| `DB_USUARIO` | `iteam` | usuário |
+| `DB_SENHA` | `iteam123` | senha |
 | `DB_NOME` | `projeto_iteam` | nome do banco |
 | `PORTA` | `8080` | porta do servidor (também aceita `servidor.exe 8081`) |
 
+## O banco de dados no Docker: comandos do dia a dia
+
+Rode sempre **na pasta onde está o `docker-compose.yml`** (o Docker Desktop precisa estar aberto).
+
+| Quero… | Comando |
+|--------|---------|
+| Subir o banco (e esperar ficar pronto) | `docker compose up -d --wait` |
+| Ver se está no ar | `docker compose ps` (deve mostrar **healthy**) |
+| Ver os registros de funcionamento (erros do banco) | `docker compose logs db` |
+| Parar no fim do dia (os dados ficam guardados) | `docker compose stop` |
+| **Zerar o banco** e aplicar o `schema.sql` de novo (apaga os dados!) | `docker compose down -v` e depois `docker compose up -d --wait` |
+| Abrir um terminal SQL dentro do banco | `docker compose exec db mariadb -uiteam -piteam123 projeto_iteam` |
+| Administrar pelo navegador (Adminer, opcional) | `docker compose --profile admin up -d`, depois <http://localhost:8081> (Sistema: MySQL; Servidor: `db`; Usuário: `iteam`; Senha: `iteam123`; Banco: `projeto_iteam`) |
+
+- O `schema.sql` é executado **só quando o banco é criado** (volume vazio). Mudou o arquivo? Zere o banco com `down -v`.
+- Os dados ficam em um *volume* do Docker e sobrevivem a `stop`/`down` e à reinicialização do computador.
+- Só um banco por vez usa a porta 3306: ao trocar de pasta (por exemplo, do `starter-kit` para o `projeto-equipe`), rode `docker compose down` na pasta antiga.
+- Se a porta 3306 já estiver ocupada, defina `DB_PORTA` (por exemplo, `set DB_PORTA=3307`) **antes** de subir o banco **e** ao executar o servidor.
+- Usuário do banco: `iteam` / `iteam123` (aplicação) e `root` / `root` (administrador). Servem apenas para desenvolvimento local; a porta só é aberta para o seu computador.
+
 ## O que pode e o que não deve mudar
 
-- **Podem e devem mudar:** `schema.sql`, `src/recado_*`, `src/rotas_*`, `src/main.cpp` (para registrar rotas), `public/*`.
+- **Podem e devem mudar:** `schema.sql`, `docker-compose.yml` (só se precisar, por exemplo, de outra porta), `src/recado_*`, `src/rotas_*`, `src/main.cpp` (para registrar rotas), `public/*`.
 - **Mudem com cuidado:** `banco.*` e `http_util.hpp` — são usados por todas as rotas. Se alterar, avise a equipe.
 - **Não editem:** `libs/` (código de terceiros).
 - **Regra de ouro do SQL:** valores **sempre** em parâmetros `?`, nunca concatenados no texto do SQL (SQL injection).
@@ -114,8 +140,11 @@ Os padrões servem para o XAMPP. Para mudar sem editar o código, defina antes d
 
 | Sintoma | Causa provável e o que fazer |
 |---------|------------------------------|
-| `AVISO: Nao foi possivel conectar ao banco` | O MySQL do XAMPP não está ligado, a porta/usuário/senha são outros (variáveis `DB_*`) ou o `schema.sql` não foi importado. |
-| `Unknown database 'projeto_iteam'` | Importe o `schema.sql`. |
+| `AVISO: Nao foi possivel conectar ao banco` | O container do banco não está no ar (`docker compose ps`; suba com `docker compose up -d --wait`), o Docker Desktop está fechado, ou a porta/usuário/senha são outros (variáveis `DB_*`). |
+| `Cannot connect to the Docker daemon` / `error during connect` | O **Docker Desktop não está aberto** (ou ainda está iniciando). Abra-o, espere o ícone ficar verde e tente de novo. |
+| `Bind for 127.0.0.1:3306 failed: port is already allocated` | Outro banco (ou o container de outra pasta) usa a porta 3306. Rode `docker compose down` na outra pasta, ou use `DB_PORTA=3307`. |
+| `Unknown database 'projeto_iteam'` ou `Table ... doesn't exist` | O banco foi criado antes de o `schema.sql` estar pronto/correto. Zere: `docker compose down -v` e `docker compose up -d --wait`. |
+| O container fica `unhealthy` / reinicia sozinho | Provável erro de SQL no `schema.sql`: veja `docker compose logs db`, corrija o arquivo e zere o banco (`down -v`). |
 | `mysql.h: No such file or directory` / `cannot find -lmariadb` | Falta a biblioteca cliente do MariaDB. Veja o guia 01 (instalação via `pacman` ou o MariaDB Connector/C) e, se necessário, defina `MARIADB_DIR`. |
 | `ERRO: nao foi possivel usar a porta 8080` | Outro programa já usa a porta (talvez uma execução anterior do servidor). Feche-o ou rode `servidor.exe 8081`. |
 | `AVISO: pasta ./public nao encontrada` | Você executou o servidor de outra pasta. Entre na pasta do starter kit antes de executar. |

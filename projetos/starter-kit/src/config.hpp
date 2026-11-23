@@ -1,9 +1,10 @@
 // config.hpp - Configuração do servidor e da conexão com o banco.
 //
-// Os valores padrão servem para o XAMPP (usuário root, sem senha). Para mudar algo sem alterar o código,
-// defina variáveis de ambiente antes de executar o servidor, por exemplo (Windows, cmd):
-//     set DB_SENHA=minha_senha
-//     set DB_NOME=biblioteca
+// Os valores padrão servem para o banco do docker-compose.yml deste projeto (usuário iteam, senha iteam123).
+// Para mudar algo sem alterar o código, defina variáveis de ambiente antes de executar o servidor,
+// por exemplo (Windows, cmd):
+//     set DB_PORTA=3307
+//     set DB_SENHA=outra_senha
 #pragma once
 
 #include <cstdlib>
@@ -12,8 +13,8 @@
 struct Config {
     std::string host{"127.0.0.1"};
     unsigned int porta{3306};
-    std::string usuario{"root"};
-    std::string senha{};
+    std::string usuario{"iteam"};
+    std::string senha{"iteam123"};
     std::string banco{"projeto_iteam"};
 
     int portaServidor{8080};

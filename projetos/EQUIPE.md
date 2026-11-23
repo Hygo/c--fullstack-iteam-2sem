@@ -27,8 +27,8 @@
 
 > O professor vai seguir exatamente estes passos. Testem em um computador que não seja o de vocês, ou refaçam tudo numa pasta nova.
 
-1. **Requisitos:** (compilador, XAMPP, biblioteca do MariaDB… com versões, se souberem)
-2. **Banco:** (como ligar o MySQL e importar o `schema.sql`)
+1. **Requisitos:** (compilador g++, biblioteca do MariaDB, Docker Desktop… com versões, se souberem)
+2. **Banco:** (como subir o banco com `docker compose`, e como zerá-lo quando o `schema.sql` mudar)
 3. **Compilar:** (comando exato)
 4. **Executar:** (comando exato, e em qual pasta)
 5. **Acessar:** (endereço no navegador)
@@ -81,7 +81,7 @@
 ## Checklist de entrega (dia 9)
 
 - [ ] O projeto compila sem avisos (`-Wall -Wextra`)
-- [ ] O `schema.sql` importa do zero e tem dados de exemplo
+- [ ] `docker compose up -d --wait` cria o banco do zero (o `schema.sql` é executado sozinho) e há dados de exemplo
 - [ ] Todo SQL usa parâmetros `?`
 - [ ] CRUD completo funciona pela tela
 - [ ] O README da equipe foi testado em outro computador

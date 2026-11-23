@@ -42,7 +42,7 @@ Verifique se o compilador está instalado com `g++ --version`. No Windows, recom
 | 3 | Unidade 3 – Funções e ponteiros |
 | 4 | Unidade 4 – Programação orientada a objetos |
 | 5 | Unidade 5 – Bibliotecas e recursos avançados · **lançamento do projeto, formação das equipes e escolha dos temas** |
-| 6 | Oficina do starter kit: XAMPP/MariaDB, build, primeira rota, JSON e SQL |
+| 6 | Oficina do starter kit: Docker/MariaDB, build, primeira rota, JSON e SQL |
 | 7 e 8 | Desenvolvimento do CRUD (API + banco + front), com checkpoints |
 | 9 | Integração, testes e documentação · **prazo final das tags de atividades** |
 | 10 | Apresentações dos projetos (10 a 12 minutos por equipe) e feedback |

@@ -13,7 +13,7 @@ Não é preciso começar do zero: o [`starter-kit/`](starter-kit/) já traz um C
 ## O que a equipe entrega
 
 1. **API em C++17** (cpp-httplib + nlohmann/json) com o **CRUD completo** da entidade principal do tema e rotas de apoio para a entidade secundária.
-2. **Banco MariaDB** (XAMPP), criado por um `schema.sql` que roda do zero, com chaves primárias e estrangeiras.
+2. **Banco MariaDB em container Docker** (`docker-compose.yml`), criado por um `schema.sql` que roda do zero, com chaves primárias e estrangeiras.
 3. **Front-end** em HTML/CSS/JS puro, servido pela própria API, com listar, buscar, criar, editar e excluir.
 4. **Documentação**: [`EQUIPE.md`](EQUIPE.md) preenchido e instruções para executar o projeto em outra máquina.
 5. **Apresentação** de 10 a 12 minutos no dia 10.
@@ -34,7 +34,7 @@ Cada tema lista os campos, as regras de validação, as rotas mínimas e ideias 
 |-----|-----------|--------------------------------|
 | 5 (final do dia) | Lançamento do projeto, formação das equipes, escolha do tema | Equipe e tema definidos; copiar o `EQUIPE.md` |
 | 6 | **Oficina do starter kit**: ambiente, build, primeira rota, JSON, SQL | ✅ O starter kit roda em **todos** os computadores da equipe e `/api/saude/banco` responde `ok` |
-| 7 | Banco do tema + entidade principal (listar e criar) | ✅ `schema.sql` do tema importado; `GET` e `POST` funcionando com `curl` |
+| 7 | Banco do tema + entidade principal (listar e criar) | ✅ `schema.sql` do tema aplicado (`docker compose down -v` e `up -d --wait`); `GET` e `POST` funcionando com `curl` |
 | 8 | CRUD completo na API + tela no front-end | ✅ Criar, editar e excluir pela tela |
 | 9 | Integração, extras, testes, documentação · **prazo das tags de atividades** | ✅ Tag `projeto-final` criada; README testado numa máquina "limpa" |
 | 10 | Apresentações e feedback | Demonstração ao vivo |
@@ -51,7 +51,7 @@ Os guias em [`guia/`](guia/) acompanham esse ritmo; leiam na ordem enquanto trab
    cp -r projetos/starter-kit projetos/projeto-equipe
    ```
 
-   A pasta `projetos/starter-kit/` continua intacta como referência; **todo o trabalho acontece em `projetos/projeto-equipe/`**.
+   A pasta `projetos/starter-kit/` continua intacta como referência; **todo o trabalho acontece em `projetos/projeto-equipe/`**, inclusive o banco: suba-o **dentro dessa pasta** (`docker compose up -d --wait`). Se você testou o banco no `starter-kit`, rode antes `docker compose down -v` lá, para não ocupar a porta 3306.
 4. Preencham o [`EQUIPE.md`](EQUIPE.md).
 5. Combinem como trabalhar com Git sem pisar no código dos colegas: [`guia/06-git-em-equipe.md`](guia/06-git-em-equipe.md).
 
@@ -61,7 +61,8 @@ Os guias em [`guia/`](guia/) acompanham esse ritmo; leiam na ordem enquanto trab
 projetos/
 ├── EQUIPE.md                 preenchido pela equipe
 ├── projeto-equipe/           ← cópia do starter-kit, adaptada ao tema
-│   ├── schema.sql            banco e tabelas do tema
+│   ├── docker-compose.yml    banco MariaDB em container (o professor sobe com `docker compose up -d --wait`)
+│   ├── schema.sql            tabelas do tema (executado automaticamente pelo Docker)
 │   ├── src/                  código C++ (rotas, repositórios, banco, main)
 │   ├── public/               front-end
 │   ├── libs/                 bibliotecas de terceiros (não editar)
@@ -80,7 +81,7 @@ projetos/
 - [ ] **Todo SQL com parâmetros `?`** (nunca concatenar valores no texto do SQL)
 - [ ] Front-end com lista, formulário de criar/editar e exclusão com confirmação; mensagens de erro vindas da API aparecem na tela
 - [ ] Compila com `g++ -std=c++17 -Wall -Wextra` **sem avisos**
-- [ ] `schema.sql` importa do zero, com alguns dados de exemplo
+- [ ] `docker compose up -d --wait` cria o banco do zero (executando o `schema.sql`), com alguns dados de exemplo
 - [ ] README da equipe com instruções que funcionam em outro computador
 - [ ] Todos os integrantes com *commits* no próprio usuário
 
@@ -91,4 +92,4 @@ Os itens da rubrica e o peso de cada um estão em [`rubrica.md`](rubrica.md). Ex
 - Todos aprendem tudo: **revezem** as tarefas (um dia banco, outro API, outro front). Na apresentação, qualquer integrante pode ser chamado a explicar qualquer parte.
 - Programação em dupla é bem-vinda. Nesse caso, quem digitou faz o *commit* e a outra pessoa entra como coautora (`Co-authored-by:` na mensagem; veja o guia 06).
 - É permitido usar documentação, o material do curso e conversar com outras equipes sobre ideias. Copiar o projeto de outra equipe, ou código que ninguém da equipe consegue explicar, não é permitido.
-- Problemas com ambiente (compilador, XAMPP, biblioteca do MariaDB) devem ser levados ao professor **no dia 6**, não deixados para depois.
+- Problemas com ambiente (compilador, Docker, biblioteca do MariaDB) devem ser levados ao professor **no dia 6**, não deixados para depois.

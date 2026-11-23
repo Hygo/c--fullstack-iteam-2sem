@@ -28,6 +28,8 @@ Um sistema para uma lojinha controlar o **estoque dos produtos**, organizados po
 
 ## Modelo de banco sugerido
 
+Copiem este SQL para o `schema.sql` do projeto (no lugar da tabela de exemplo, mas **mantendo** o `CREATE DATABASE`/`USE` do começo do arquivo) e apliquem com `docker compose down -v` e `docker compose up -d --wait`.
+
 ```sql
 CREATE TABLE IF NOT EXISTS categorias (
     id   INT UNSIGNED NOT NULL AUTO_INCREMENT,

@@ -30,7 +30,7 @@ DELETE FROM livros WHERE id = 1;
 
 Pontos que o professor vai olhar no seu `schema.sql`:
 
-- `IF NOT EXISTS`: pode importar de novo sem erro.
+- `IF NOT EXISTS`: o arquivo pode ser executado de novo sem erro.
 - **Chave primária** em toda tabela e **chave estrangeira** em toda ligação.
 - `NOT NULL` onde o campo é obrigatório; `UNIQUE` para códigos que não repetem (SKU, ISBN, e-mail); `CHECK` para regras simples (preço ≥ 0).
 - Tipos adequados: dinheiro em `DECIMAL`, datas em `DATE`, nunca `FLOAT` para dinheiro.
@@ -38,7 +38,10 @@ Pontos que o professor vai olhar no seu `schema.sql`:
 - O banco **recusa** dados inválidos mesmo que a API falhe: validação na API **e** restrições no banco.
 - Dados de exemplo no final, com `INSERT`, para a demonstração.
 
-Dica: faça e teste o SQL no **phpMyAdmin** (aba *SQL*) antes de colocar no C++.
+Dica: teste o SQL **antes** de colocar no C++. Duas formas (veja os comandos no README do starter kit):
+
+- terminal SQL dentro do container: `docker compose exec db mariadb -uiteam -piteam123 projeto_iteam`;
+- **Adminer** (tela no navegador, opcional): `docker compose --profile admin up -d` e abra <http://localhost:8081> (Servidor: `db`; usuário `iteam`; senha `iteam123`).
 
 ## 2. Usando o `Conexao` (src/banco.hpp)
 
@@ -166,7 +169,16 @@ SELECT genero, COUNT(*) AS total, SUM(exemplares) AS exemplares FROM livros GROU
 
 ### 5.7 Mudar a tabela depois de criada
 
-`CREATE TABLE IF NOT EXISTS` **não altera** uma tabela que já existe. Se vocês mudarem a estrutura, apaguem o banco no phpMyAdmin e importem o `schema.sql` de novo (ou, no terminal: `C:\xampp\mysql\bin\mysql.exe -u root -e "DROP DATABASE projeto_iteam"`). Por isso o `schema.sql` deve ser a **única fonte da verdade** da estrutura: não façam alterações "só no phpMyAdmin".
+O Docker executa o `schema.sql` **uma única vez**: quando o banco é criado (volume vazio). Se vocês mudarem o arquivo, o banco que já existe **não muda**. Para aplicar o novo schema, apaguem os dados e subam de novo:
+
+```bash
+docker compose down -v          # apaga o container E os dados (volume)
+docker compose up -d --wait     # cria tudo de novo e executa o schema.sql
+```
+
+Por isso o `schema.sql` deve ser a **única fonte da verdade** da estrutura **e** ter os dados de exemplo (`INSERT`): quem apagar o banco recupera tudo com dois comandos. Não façam alterações "só no Adminer" ou "só no terminal SQL": elas somem no próximo `down -v`.
+
+Se o `schema.sql` tiver um erro de SQL, o banco não termina de ser criado (o container fica `unhealthy`). Veja a mensagem com `docker compose logs db`, corrija o arquivo e zere o banco de novo.
 
 ## 6. Erros do banco que você vai ver
 
@@ -178,15 +190,15 @@ SELECT genero, COUNT(*) AS total, SUM(exemplares) AS exemplares FROM livros GROU
 | 4025 / 3819 | CONSTRAINT … failed | violou um `CHECK` | 422 |
 | 1292 | Incorrect date value | data inválida (ex.: `''`) | 500 (corrija a validação ou use `NULLIF`) |
 | 1054 | Unknown column | nome de coluna errado no SQL | 500 (é bug nosso: veja o console do servidor) |
-| 1146 | Table doesn't exist | tabela não criada | 500 (falta importar o `schema.sql`) |
-| 2002 | Can't connect | MySQL desligado | 500 |
+| 1146 | Table doesn't exist | tabela não criada | 500 (o `schema.sql` não foi aplicado: `down -v` e `up`) |
+| 2002 / 2003 | Can't connect | banco desligado (container parado ou Docker fechado) | 500 |
 
 Os detalhes aparecem **no console do servidor**, não na resposta (não expomos detalhes internos a quem chama a API).
 
 ## 7. Exercícios
 
-1. Importe o `schema.sql` do starter kit e rode, no phpMyAdmin, um `SELECT` da tabela `recados`.
-2. Escreva o `schema.sql` do **seu tema** (use o modelo sugerido em [`../temas/`](../temas/)) e importe. Teste: o que acontece se você tentar inserir um filho com pai inexistente? E repetir um valor `UNIQUE`?
+1. Suba o banco do starter kit (`docker compose up -d --wait`) e rode, no terminal SQL do container ou no Adminer, um `SELECT` da tabela `recados`.
+2. Escreva o `schema.sql` do **seu tema** (use o modelo sugerido em [`../temas/`](../temas/)) e aplique (`docker compose down -v` e `up -d --wait`). Teste: o que acontece se você tentar inserir um filho com pai inexistente? E repetir um valor `UNIQUE`?
 3. Crie `<entidade>_repositorio.hpp/.cpp` copiando o de recados e adaptando. Teste cada método com uma rota e `curl`.
 4. Rode o teste de *SQL injection* da seção 3 contra a sua rota de busca.
 
