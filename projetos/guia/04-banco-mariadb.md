@@ -2,6 +2,8 @@
 
 **Objetivo:** modelar as tabelas do tema, gravar e consultar pelo C++ com segurança e organizar o SQL em um **repositório**.
 
+🎬 **No demo:** o `schema.sql` (passo 1) e os repositórios (passos 2, 3 e 5) usam todas as receitas da seção 5: `NULLIF`, chave estrangeira, `JOIN`, `LIKE` e agregações ([`demo/`](../demo/README.md)).
+
 ## 1. Revisão rápida de SQL
 
 ```sql

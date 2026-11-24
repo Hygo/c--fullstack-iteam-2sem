@@ -2,6 +2,8 @@
 
 **Objetivo:** ler e montar JSON com a biblioteca **nlohmann/json**, validar os dados que chegam e responder com o código de status certo.
 
+🎬 **No demo:** o `validacao.hpp` do passo 3 reúne as validações reutilizáveis ([`demo/src/validacao.hpp`](../demo/src/validacao.hpp); roteiro em [`demo/ROTEIRO-LIVE-CODING.md`](../demo/ROTEIRO-LIVE-CODING.md)).
+
 > Regra de ouro: **nunca confie no que chega pela rede.** O front-end pode ter um bug, o usuário pode mexer na requisição, e o `curl` envia o que quiser. A API sempre valida.
 
 ## 1. JSON em C++ com nlohmann/json

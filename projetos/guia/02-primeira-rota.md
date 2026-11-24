@@ -3,6 +3,8 @@
 **Pré-requisito:** o starter kit rodando em todos os computadores da equipe ([guia 1](01-preparar-ambiente.md)).
 **Objetivo:** entender o que é uma rota e criar três rotas novas, sem banco de dados ainda.
 
+🎬 **No demo:** o passo 2 mostra uma rota de verdade, com repositório e validação ([`demo-passo-2`](../demo/ROTEIRO-LIVE-CODING.md)).
+
 ## 1. O que acontece quando o navegador pede uma página
 
 Uma requisição HTTP tem quatro partes que nos interessam:

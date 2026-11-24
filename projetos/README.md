@@ -10,6 +10,8 @@ Navegador (HTML + CSS + JavaScript)  ⇄  API em C++ (JSON sobre HTTP)  ⇄  Mar
 
 Não é preciso começar do zero: o [`starter-kit/`](starter-kit/) já traz um CRUD de exemplo funcionando (*recados*). O desafio é **adaptá-lo ao tema da equipe**, com banco bem modelado, API validando os dados e uma tela que funcione de verdade.
 
+🎬 **Quer ver o resultado esperado?** A pasta [`demo/`](demo/) tem um projeto completo, de outro domínio (*Tarefas por Projeto*), construído **em passos**, com uma tag do Git em cada um. Rode-o, leia o código e use o [README do demo](demo/README.md) como modelo para o da sua equipe. O roteiro dos passos está em [`demo/ROTEIRO-LIVE-CODING.md`](demo/ROTEIRO-LIVE-CODING.md).
+
 ## O que a equipe entrega
 
 1. **API em C++17** (cpp-httplib + nlohmann/json) com o **CRUD completo** da entidade principal do tema e rotas de apoio para a entidade secundária.
@@ -68,7 +70,7 @@ projetos/
 │   ├── libs/                 bibliotecas de terceiros (não editar)
 │   ├── build.sh  build.bat
 │   └── README.md             como instalar, compilar e executar (atualizado pela equipe)
-└── (starter-kit/, guia/, temas/, rubrica.md ... material do professor)
+└── (starter-kit/, demo/, guia/, temas/, rubrica.md ... material do professor)
 ```
 
 > Dentro de `projeto-equipe/`, **substituam o `README.md` do starter kit** por um README da equipe: nome do projeto, como rodar do zero, lista de rotas e prints da tela. O professor vai seguir esse README para executar o projeto.

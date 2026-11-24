@@ -1,156 +1,134 @@
-# Starter kit — API em C++ + MariaDB + front-end
+# Demo — Tarefas por Projeto
 
-Um CRUD **completo e funcionando** (o recurso de exemplo se chama *recados*) para a sua equipe usar como ponto de partida. O trabalho de vocês é **trocar o exemplo pelo tema do projeto** e deixar tudo bem feito, não construir a infraestrutura do zero.
+> **Este é o projeto-modelo do professor.** Ele tem a mesma forma que o projeto de vocês (uma entidade principal, uma de apoio, API em C++, MariaDB no Docker e front-end) e foi construído em passos, com uma *tag* do Git em cada um. Use-o de três jeitos: **rodar** para ver o resultado esperado, **ler o código** quando travar, e **copiar o formato deste README** para o README da sua equipe.
+> Roteiro dos passos e das tags: [`ROTEIRO-LIVE-CODING.md`](ROTEIRO-LIVE-CODING.md). Exemplo de `EQUIPE.md` preenchido: [`EQUIPE.md`](EQUIPE.md).
 
-```
-Navegador (public/index.html + app.js)
-        │  fetch() com JSON
-        ▼
-Servidor C++ (cpp-httplib)  ──►  rotas_*.cpp  ──►  *_repositorio.cpp  ──►  MariaDB (container Docker)
-```
-
-## Estrutura
+Um sistema para uma turma acompanhar as **tarefas** de cada **projeto**: cadastrar projetos, cadastrar tarefas com prazo e prioridade, filtrar, concluir e ver um resumo do andamento.
 
 ```
-starter-kit/
-├── docker-compose.yml       sobe o banco MariaDB em um container Docker
-├── build.sh / build.bat     compilam o servidor (build.sh só recompila o que mudou)
-├── schema.sql               cria as tabelas (o Docker executa este arquivo ao criar o banco)
-├── libs/                    bibliotecas de terceiros (não precisa instalar nada além do MariaDB):
-│   ├── httplib.h            cpp-httplib (servidor HTTP)
-│   └── nlohmann/json.hpp    nlohmann/json (JSON)
-├── src/
-│   ├── main.cpp             liga tudo: rotas, arquivos estáticos, tratamento de erros, porta
-│   ├── config.hpp           host/usuário/senha do banco e porta do servidor
-│   ├── banco.hpp/.cpp       conexão com o MariaDB (consultar / executar, com parâmetros "?")
-│   ├── http_util.hpp        enviarJson, enviarErro, lerCorpoObjeto, lerId, comBanco
-│   ├── recado_repositorio.* TODO o SQL do recurso "recados"
-│   └── rotas_recados.*      rotas HTTP + validação do recurso "recados"
-└── public/                  front-end (o servidor entrega estes arquivos ao navegador)
-    ├── index.html
-    ├── estilo.css
-    ├── config.js            ← a configuração da tela (título, recurso da API, campos): é o que se edita
-    └── app.js               CRUD genérico: monta tabela, formulário e busca a partir do config.js
+Navegador (public/*.html + app.js)  ⇄  API em C++ (cpp-httplib + nlohmann/json)  ⇄  MariaDB (Docker)
 ```
 
-## Rodando pela primeira vez
+## Telas
 
-Pré-requisitos (compilador, biblioteca do MariaDB e Docker): [`../guia/01-preparar-ambiente.md`](../guia/01-preparar-ambiente.md).
+| Tarefas (lista, formulário, filtros e busca) | Erro de validação vindo da API |
+|---|---|
+| ![Tela de tarefas](docs/tarefas.png) | ![Erro de validação](docs/erro-validacao.png) |
 
-1. **Suba o banco** (o Docker Desktop precisa estar aberto). Na pasta do starter kit:
+| Projetos | Resumo |
+|---|---|
+| ![Tela de projetos](docs/projetos.png) | ![Tela de resumo](docs/resumo.png) |
+
+Tarefas **atrasadas** (não concluídas e com prazo vencido) ficam em vermelho; tarefas **feitas** ficam apagadas e sem o botão *Concluir*.
+
+## Como executar (do zero, em outro computador)
+
+1. **Requisitos:** g++ com suporte a C++17 (MSYS2 UCRT64), biblioteca cliente do MariaDB (`libmariadb`) e Docker Desktop. Instalação detalhada: [`../guia/01-preparar-ambiente.md`](../guia/01-preparar-ambiente.md).
+2. **Banco** (Docker Desktop aberto), na pasta `projetos/demo`:
 
    ```bash
    docker compose up -d --wait
    ```
 
-   A primeira vez baixa a imagem do MariaDB (pode levar alguns minutos) e executa o `schema.sql` sozinho. Confira com `docker compose ps`: o serviço `db` deve aparecer como **healthy**.
-2. **Compile** (a primeira vez demora, pois a `httplib.h` é grande):
-   - terminal do MSYS2 UCRT64: `./build.sh`
-   - `cmd` ou PowerShell: `build.bat`
-3. **Execute, dentro da pasta do starter kit** (o servidor procura `./public` a partir dela):
-   - `./build/servidor.exe` (ou `./build.sh rodar`)
-4. Abra **http://localhost:8080** no navegador. Você deve ver a tela de *Recados* com um registro de boas-vindas.
+   Cria o banco `projeto_iteam`, executa o `schema.sql` sozinho e insere dados de exemplo. Para **zerar** o banco e aplicar o `schema.sql` de novo (apaga os dados): `docker compose down -v` e depois `docker compose up -d --wait`.
+3. **Compilar:** `./build.sh` (terminal do MSYS2 UCRT64) ou `build.bat` (`cmd`).
+4. **Executar**, dentro da pasta `projetos/demo`: `./build/servidor.exe` (ou `./build.sh rodar`).
+5. **Acessar:** <http://localhost:8080>
 
-Se algo falhar, veja a seção *Problemas comuns*, no fim deste arquivo.
+> Só um banco por vez usa a porta 3306. Se você subiu o banco do `starter-kit` ou de outra pasta, rode `docker compose down` lá antes. Outros problemas comuns: veja o [README do starter kit](../starter-kit/README.md#problemas-comuns).
 
-## Testando a API sem o front-end
+## Rotas da API
 
-Com o servidor rodando, em outro terminal:
+| Método | Caminho | O que faz | Status possíveis |
+|--------|---------|-----------|------------------|
+| GET | `/api/saude` | servidor no ar | 200 |
+| GET | `/api/saude/banco` | testa a conexão com o MariaDB | 200 · 500 |
+| GET | `/api/projetos` | lista os projetos, cada um com `total_tarefas` | 200 |
+| POST | `/api/projetos` | cria um projeto | 201 · 409 (nome repetido) · 422 |
+| DELETE | `/api/projetos/:id` | remove um projeto | 204 · 404 · 409 (ainda tem tarefas) |
+| GET | `/api/tarefas` | lista as tarefas; aceita `?busca=`, `?status=` e `?projeto_id=` (combinados) | 200 · 422 (filtro inválido) |
+| GET | `/api/tarefas/resumo` | totais por status, atrasadas, horas restantes e andamento por projeto | 200 |
+| GET | `/api/tarefas/:id` | uma tarefa | 200 · 400 · 404 |
+| POST | `/api/tarefas` | cria uma tarefa | 201 · 400 · 422 |
+| PUT | `/api/tarefas/:id` | atualiza (substitui todos os campos) | 200 · 400 · 404 · 422 |
+| POST | `/api/tarefas/:id/concluir` | marca como `feito` e guarda a data/hora | 200 · 404 · 409 (já concluída) |
+| DELETE | `/api/tarefas/:id` | remove uma tarefa | 204 · 404 |
+
+Exemplos (no terminal do MSYS2/bash, com o servidor rodando):
 
 ```bash
-curl http://localhost:8080/api/saude                    # {"status":"ok"}
-curl http://localhost:8080/api/saude/banco              # {"banco":"ok"}  (testa a conexão com o MariaDB)
-curl http://localhost:8080/api/recados                  # lista
-curl "http://localhost:8080/api/recados?busca=bem"      # busca
-curl -X POST http://localhost:8080/api/recados -d '{"titulo":"Teste","prioridade":2}'
-curl -X PUT  http://localhost:8080/api/recados/2 -d '{"titulo":"Novo titulo"}'
-curl -X DELETE http://localhost:8080/api/recados/2
+# Criar uma tarefa: só projeto_id e titulo são obrigatórios
+curl -X POST http://localhost:8080/api/tarefas \
+  -d '{"projeto_id":1,"titulo":"Revisar o cardápio","prioridade":2,"prazo":"2026-12-10","horas_estimadas":1.5}'
+# 201 {"id":10,"projeto_id":1,"projeto_nome":"Site da Padaria","titulo":"Revisar o cardápio","descricao":null,
+#      "status":"pendente","prioridade":2,"prazo":"2026-12-10","horas_estimadas":1.5,"concluida_em":null,"criado_em":"..."}
+
+# Dados inválidos: todos os problemas de uma vez
+curl -X POST http://localhost:8080/api/tarefas -d '{"projeto_id":1,"titulo":"","prioridade":9}'
+# 422 {"erro":"Dados invalidos","detalhes":["titulo e obrigatorio","prioridade deve ser um numero inteiro de 1 a 5"]}
+
+# Filtros combinados (E): pendentes do projeto 1 que contenham "site"
+curl "http://localhost:8080/api/tarefas?status=pendente&projeto_id=1&busca=site"
+
+# Concluir (a segunda vez responde 409: a tarefa já está concluída)
+curl -X POST http://localhost:8080/api/tarefas/3/concluir
+
+# Resumo para o painel
+curl http://localhost:8080/api/tarefas/resumo
+
+# Projeto com tarefas não pode ser apagado
+curl -X DELETE http://localhost:8080/api/projetos/1       # 409
 ```
 
-> Estes exemplos usam as aspas do bash: rode-os no **terminal do MSYS2**. No `cmd` e no PowerShell as aspas funcionam de outro jeito (e, no PowerShell, `curl` é um apelido de outro comando; use `curl.exe`). Outra opção é testar com a extensão *Thunder Client* do VS Code.
+No `cmd` e no PowerShell as aspas funcionam de outro jeito (e, no PowerShell, use `curl.exe`); prefira o terminal do MSYS2 ou a extensão *Thunder Client* do VS Code.
 
-## Padrão das respostas
+## Banco de dados
 
-| Situação | Status | Corpo |
-|----------|:------:|-------|
-| Lista / busca / atualização OK | 200 | JSON (array ou objeto) |
-| Criado | 201 | o registro criado |
-| Removido | 204 | vazio |
-| JSON inválido ou id inválido | 400 | `{"erro": "..."}` |
-| Registro não encontrado / rota inexistente | 404 | `{"erro": "..."}` |
-| Valor único repetido ou registro relacionado | 409 | `{"erro": "..."}` |
-| Dados que não passam na validação (ou numa regra `CHECK` do banco) | 422 | `{"erro": "Dados invalidos", "detalhes": ["...", "..."]}` |
-| Falha no banco / erro interno | 500 | `{"erro": "..."}` (os detalhes ficam só no console do servidor) |
+| Tabela | Colunas principais | Relacionamentos / regras |
+|--------|--------------------|--------------------------|
+| `projetos` | `id`, `nome`, `descricao`, `criado_em` | `nome` **obrigatório** e **único** (repetir → erro 1062 → API 409) |
+| `tarefas` | `id`, `projeto_id`, `titulo`, `descricao`, `status`, `prioridade`, `prazo`, `horas_estimadas`, `concluida_em`, `criado_em` | `projeto_id` → `projetos.id` (**FK, `ON DELETE RESTRICT`**); `CHECK` em `status` (`pendente`/`andamento`/`feito`), `prioridade` (1 a 5) e `horas_estimadas` (≥ 0); `prazo`, `horas_estimadas` e `descricao` opcionais (gravam `NULL` de verdade) |
 
-## Como trocar o exemplo pelo seu tema
+```
+projetos (1) ───────< (N) tarefas
+```
 
-Siga sempre esta ordem; cada passo pode ser testado antes do próximo.
+## Estrutura do código
 
-1. **Tabela** — em `schema.sql`, crie a tabela do seu tema (veja o tema em [`../temas/`](../temas/)) e **aplique de novo**: `docker compose down -v` e depois `docker compose up -d --wait` (o schema só roda quando o banco é criado).
-2. **Repositório** — copie `recado_repositorio.hpp/.cpp` para `livro_repositorio.*` (ou `pet_`, `produto_`) e ajuste o nome da classe, as colunas e os SQLs. **Todo SQL fica aqui.**
-3. **Rotas** — copie `rotas_recados.hpp/.cpp` para `rotas_livros.*` e ajuste os caminhos (`/api/livros`), a validação e as mensagens.
-4. **Registro** — em `main.cpp`, inclua o cabeçalho novo e chame `registrarRotasLivros(servidor, config);`.
-5. **Compilação** — o `build.sh` já enxerga os novos `.cpp` de `src/`. No `build.bat`, acrescente-os na lista `FONTES`.
-6. **Front-end** — em `public/config.js`, troque o título, o recurso e os campos. Para uma segunda tela (a entidade de apoio), copie `index.html` e o `config.js` (veja o guia 05).
-7. **Teste com `curl` e depois no navegador**, e só então faça o *commit*.
+```
+demo/
+├── docker-compose.yml, schema.sql      banco em container + tabelas e dados de exemplo
+├── build.sh, build.bat                 compilação (no build.bat, novos .cpp entram na lista FONTES)
+├── src/
+│   ├── main.cpp                        liga tudo: rotas, arquivos estáticos, tratamento de erros
+│   ├── banco.*, config.hpp, http_util.hpp   infraestrutura do starter kit (não mudou)
+│   ├── parametros.hpp                  conversões dos valores que vão nos "?" do SQL
+│   ├── validacao.hpp                   funções reutilizáveis de validação (texto, faixa, lista, data...)
+│   ├── projeto_repositorio.*           TODO o SQL de "projetos"
+│   ├── tarefa_repositorio.*            TODO o SQL de "tarefas" (JOIN, filtros dinâmicos, resumo)
+│   └── rotas_projetos.*, rotas_tarefas.*   rotas HTTP + validação
+└── public/
+    ├── index.html + config.js          tela de Tarefas (o app.js monta tudo a partir do config.js)
+    ├── projetos.html + config-projetos.js   tela de Projetos (mesmo app.js, outra configuração)
+    └── resumo.html + resumo.js         página própria que consome /api/tarefas/resumo
+```
 
-Os guias [`03-json-e-validacao.md`](../guia/03-json-e-validacao.md), [`04-banco-mariadb.md`](../guia/04-banco-mariadb.md) e [`05-front-end.md`](../guia/05-front-end.md) explicam cada parte.
+## Decisões de projeto
 
-## Configuração (variáveis de ambiente)
+- **Todo o SQL fica nos repositórios**; as rotas só validam a entrada e traduzem o resultado em status HTTP. Assim dá para trocar uma consulta sem mexer nas rotas.
+- **Duas camadas de proteção:** a API valida (mensagens claras, 422) **e** o banco tem `NOT NULL`, `UNIQUE`, `FK` e `CHECK`. Se algo escapar da API, o banco ainda recusa, e o `comBanco` traduz o erro para 409/422.
+- **`projeto_id` inexistente é conferido antes de gravar** (resposta 422 "projeto_id nao existe"), em vez de deixar o banco recusar com um 409 genérico.
+- **Campos opcionais** usam `NULLIF(?, '')` no SQL: o front pode mandar vazio e o banco guarda `NULL`.
+- **"Concluir" é uma rota de ação** (`POST /api/tarefas/:id/concluir`), não um `PUT` com todos os campos: o servidor decide a data de conclusão, não o navegador.
+- **`/api/tarefas/resumo` é registrada antes de `/api/tarefas/:id`.** O httplib testa as rotas na ordem de registro; com a ordem trocada, o `:id` receberia a palavra "resumo" e a resposta seria 400 "Id invalido".
 
-Os padrões servem para o banco do `docker-compose.yml`. Para mudar sem editar o código, defina antes de executar (no `cmd`: `set NOME=valor`; no MSYS2/bash: `export NOME=valor`):
+## Extras implementados
 
-| Variável | Padrão | Para que serve |
-|----------|--------|----------------|
-| `DB_HOST` | `127.0.0.1` | endereço do MariaDB |
-| `DB_PORTA` | `3306` | porta do MariaDB (o `docker-compose.yml` também lê esta variável) |
-| `DB_USUARIO` | `iteam` | usuário |
-| `DB_SENHA` | `iteam123` | senha |
-| `DB_NOME` | `projeto_iteam` | nome do banco |
-| `PORTA` | `8080` | porta do servidor (também aceita `servidor.exe 8081`) |
-
-## O banco de dados no Docker: comandos do dia a dia
-
-Rode sempre **na pasta onde está o `docker-compose.yml`** (o Docker Desktop precisa estar aberto).
-
-| Quero… | Comando |
-|--------|---------|
-| Subir o banco (e esperar ficar pronto) | `docker compose up -d --wait` |
-| Ver se está no ar | `docker compose ps` (deve mostrar **healthy**) |
-| Ver os registros de funcionamento (erros do banco) | `docker compose logs db` |
-| Parar no fim do dia (os dados ficam guardados) | `docker compose stop` |
-| **Zerar o banco** e aplicar o `schema.sql` de novo (apaga os dados!) | `docker compose down -v` e depois `docker compose up -d --wait` |
-| Abrir um terminal SQL dentro do banco | `docker compose exec db mariadb -uiteam -piteam123 projeto_iteam` |
-| Administrar pelo navegador (Adminer, opcional) | `docker compose --profile admin up -d`, depois <http://localhost:8081> (Sistema: MySQL; Servidor: `db`; Usuário: `iteam`; Senha: `iteam123`; Banco: `projeto_iteam`) |
-
-- O `schema.sql` é executado **só quando o banco é criado** (volume vazio). Mudou o arquivo? Zere o banco com `down -v`.
-- Os dados ficam em um *volume* do Docker e sobrevivem a `stop`/`down` e à reinicialização do computador.
-- Só um banco por vez usa a porta 3306: ao trocar de pasta (por exemplo, do `starter-kit` para o `projeto-equipe`), rode `docker compose down` na pasta antiga.
-- Se a porta 3306 já estiver ocupada, defina `DB_PORTA` (por exemplo, `set DB_PORTA=3307`) **antes** de subir o banco **e** ao executar o servidor.
-- Usuário do banco: `iteam` / `iteam123` (aplicação) e `root` / `root` (administrador). Servem apenas para desenvolvimento local; a porta só é aberta para o seu computador.
-
-## O que pode e o que não deve mudar
-
-- **Podem e devem mudar:** `schema.sql`, `docker-compose.yml` (só se precisar, por exemplo, de outra porta), `src/recado_*`, `src/rotas_*`, `src/main.cpp` (para registrar rotas), `public/*`.
-- **Mudem com cuidado:** `banco.*` e `http_util.hpp` — são usados por todas as rotas. Se alterar, avise a equipe.
-- **Não editem:** `libs/` (código de terceiros).
-- **Regra de ouro do SQL:** valores **sempre** em parâmetros `?`, nunca concatenados no texto do SQL (SQL injection).
-
-## Problemas comuns
-
-| Sintoma | Causa provável e o que fazer |
-|---------|------------------------------|
-| `AVISO: Nao foi possivel conectar ao banco` | O container do banco não está no ar (`docker compose ps`; suba com `docker compose up -d --wait`), o Docker Desktop está fechado, ou a porta/usuário/senha são outros (variáveis `DB_*`). |
-| `Cannot connect to the Docker daemon` / `error during connect` | O **Docker Desktop não está aberto** (ou ainda está iniciando). Abra-o, espere o ícone ficar verde e tente de novo. |
-| `Bind for 127.0.0.1:3306 failed: port is already allocated` | Outro banco (ou o container de outra pasta) usa a porta 3306. Rode `docker compose down` na outra pasta, ou use `DB_PORTA=3307`. |
-| `Unknown database 'projeto_iteam'` ou `Table ... doesn't exist` | O banco foi criado antes de o `schema.sql` estar pronto/correto. Zere: `docker compose down -v` e `docker compose up -d --wait`. |
-| O container fica `unhealthy` / reinicia sozinho | Provável erro de SQL no `schema.sql`: veja `docker compose logs db`, corrija o arquivo e zere o banco (`down -v`). |
-| `mysql.h: No such file or directory` / `cannot find -lmariadb` | Falta a biblioteca cliente do MariaDB. Veja o guia 01 (instalação via `pacman` ou o MariaDB Connector/C) e, se necessário, defina `MARIADB_DIR`. |
-| `ERRO: nao foi possivel usar a porta 8080` | Outro programa já usa a porta (talvez uma execução anterior do servidor). Feche-o ou rode `servidor.exe 8081`. |
-| `AVISO: pasta ./public nao encontrada` | Você executou o servidor de outra pasta. Entre na pasta do starter kit antes de executar. |
-| Janela fecha ao abrir o `.exe` e/ou erro sobre `libmariadb.dll` | A DLL do MariaDB não está no `PATH`. Rode pelo terminal do MSYS2 ou copie a `libmariadb.dll` para a pasta `build/`. |
-| Alterei o código e nada mudou | Compile de novo (`./build.sh`) e **reinicie** o servidor. Para mudanças só no `public/`, basta recarregar a página (Ctrl+F5). |
-| Acentos estranhos no navegador | Salve os arquivos do projeto em **UTF-8**. |
+- [x] Busca (no título, na descrição e no nome do projeto) e filtros por status e projeto
+- [x] Rota de resumo + página de resumo
+- [x] Validações no front-end (campo obrigatório) além das da API
+- [x] Destaque visual de tarefas atrasadas e botão *Concluir*
+- [ ] Paginação ou ordenação (de propósito, ficou de fora: é um bom desafio para a sua equipe)
 
 ## Créditos das bibliotecas
 

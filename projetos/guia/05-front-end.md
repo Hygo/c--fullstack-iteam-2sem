@@ -2,6 +2,8 @@
 
 **Objetivo:** adaptar a tela do starter kit ao seu tema, entender como ela conversa com a API e depurar problemas pelo navegador.
 
+🎬 **No demo:** o `config.js`, o `config-projetos.js` e a página própria `resumo.html` (passos 4 e 5) são exemplos prontos de tudo o que este guia descreve ([`demo/public/`](../demo/public/)).
+
 ## 1. Como o front-end chega ao navegador
 
 O próprio servidor em C++ entrega os arquivos da pasta `public/`:

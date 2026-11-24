@@ -19,7 +19,7 @@ Como a nota é calculada: [AVALIACAO.md](AVALIACAO.md).
 | [`unidade-03/`](unidade-03/) | Funções e ponteiros | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
 | [`unidade-04/`](unidade-04/) | Programação orientada a objetos | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
 | [`unidade-05/`](unidade-05/) | Bibliotecas e recursos avançados | 15 (5 🟢 · 5 🟡 · 5 🔴) | Liberado |
-| [`projetos/`](projetos/) | **Projeto final:** API + banco de dados + front-end, em equipes de 4 | 1 projeto (3 temas) | Liberado |
+| [`projetos/`](projetos/) | **Projeto final:** API + banco de dados + front-end, em equipes de 4 (com um [demo](projetos/demo/) completo, feito em passos) | 1 projeto (3 temas) | Liberado |
 
 Cada unidade tem um `exercicios.md` (enunciados, saída esperada e critérios de aceite) e uma pasta `base/` com um arquivo `.cpp` inicial para cada atividade.
 
@@ -42,7 +42,7 @@ Verifique se o compilador está instalado com `g++ --version`. No Windows, recom
 | 3 | Unidade 3 – Funções e ponteiros |
 | 4 | Unidade 4 – Programação orientada a objetos |
 | 5 | Unidade 5 – Bibliotecas e recursos avançados · **lançamento do projeto, formação das equipes e escolha dos temas** |
-| 6 | Oficina do starter kit: Docker/MariaDB, build, primeira rota, JSON e SQL |
+| 6 | Oficina do starter kit: Docker/MariaDB, build, primeira rota, JSON e SQL (com o [demo](projetos/demo/ROTEIRO-LIVE-CODING.md)) |
 | 7 e 8 | Desenvolvimento do CRUD (API + banco + front), com checkpoints |
 | 9 | Integração, testes e documentação · **prazo final das tags de atividades** |
 | 10 | Apresentações dos projetos (10 a 12 minutos por equipe) e feedback |

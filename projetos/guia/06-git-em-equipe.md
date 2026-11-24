@@ -2,6 +2,8 @@
 
 **Objetivo:** quatro pessoas mexendo no mesmo projeto **sem apagar o trabalho umas das outras**, e deixando um histórico que mostra a contribuição de cada um.
 
+🎬 **No demo:** o projeto foi construído em *commits* pequenos, com uma *tag* por passo (`demo-passo-0` … `demo-passo-6`). Veja como revisar um passo na seção "Para os alunos" de [`demo/ROTEIRO-LIVE-CODING.md`](../demo/ROTEIRO-LIVE-CODING.md).
+
 Pré-requisito: a cópia da equipe criada e os colaboradores convidados ([`COMO-OBTER-AS-ATIVIDADES.md`](../../COMO-OBTER-AS-ATIVIDADES.md), seção 7) e o Git identificado com o seu nome e e-mail ([guia 1](01-preparar-ambiente.md), seção 4).
 
 ## 1. A ideia em uma figura
