@@ -49,8 +49,42 @@ const CONFIG = {
     { nome: "descricao", rotulo: "Descrição", tipo: "textarea", largo: true },
     { nome: "concluida_em", rotulo: "Concluída em", tipo: "somenteLeitura" },
   ],
+  // Passo 5: listas de filtro ao lado da busca (a API filtra com ?status=...&projeto_id=...).
+  filtros: [
+    {
+      nome: "status", rotulo: "Status",
+      opcoes: [
+        { valor: "pendente", rotulo: "Pendente" },
+        { valor: "andamento", rotulo: "Em andamento" },
+        { valor: "feito", rotulo: "Feito" },
+      ],
+    },
+    { nome: "projeto_id", rotulo: "Projeto", opcoesDe: { recurso: "projetos", valor: "id", rotulo: "nome" } },
+  ],
+  // Passo 5: tarefa atrasada (não feita e com prazo vencido) fica vermelha; tarefa feita fica apagada.
+  classeLinha: (tarefa) => {
+    if (tarefa.status === "feito") return "linha-apagada";
+    if (tarefa.prazo && tarefa.prazo < hoje()) return "linha-alerta";
+    return null;
+  },
+  // Passo 5: botão "Concluir" na linha, que chama POST /api/tarefas/:id/concluir.
+  acoesExtras: [
+    {
+      rotulo: "Concluir", metodo: "POST", mensagem: "Tarefa concluída.",
+      caminho: (tarefa) => "/api/tarefas/" + tarefa.id + "/concluir",
+      mostrarSe: (tarefa) => tarefa.status !== "feito",
+    },
+  ],
   menu: [
     { texto: "Tarefas", href: "index.html" },
     { texto: "Projetos", href: "projetos.html" },
+    { texto: "Resumo", href: "resumo.html" },
   ],
 };
+
+// Data de hoje no formato AAAA-MM-DD (hora local), para comparar com o campo "prazo".
+function hoje() {
+  const agora = new Date();
+  const dois = (n) => String(n).padStart(2, "0");
+  return agora.getFullYear() + "-" + dois(agora.getMonth() + 1) + "-" + dois(agora.getDate());
+}

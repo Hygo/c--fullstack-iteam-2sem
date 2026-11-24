@@ -122,3 +122,16 @@ tr.linha-apagada td { color: #7b8499; background: #f6f7fa; }
 }
 .aviso.ok { border-color: var(--cor-ok); color: var(--cor-ok); }
 .aviso.erro { border-color: var(--cor-perigo); color: var(--cor-perigo); }
+
+/* Página de resumo (resumo.html) */
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.8rem; }
+.indicador { border: 1px solid var(--cor-borda); border-radius: 10px; padding: 0.8rem 1rem; background: #fafbfd; }
+.indicador .valor { display: block; font-size: 1.8rem; font-weight: 700; color: var(--cor-principal); }
+.indicador .rotulo { font-size: 0.85rem; color: #55607a; }
+.indicador.alerta { border-color: var(--cor-perigo); background: #fdecea; }
+.indicador.alerta .valor { color: var(--cor-perigo); }
+.projeto-resumo { margin-bottom: 1rem; }
+.projeto-titulo { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.3rem; font-size: 0.95rem; }
+.projeto-titulo span { color: #55607a; }
+.progresso { height: 0.7rem; background: #e6e9f0; border-radius: 999px; overflow: hidden; }
+.progresso-preenchido { height: 100%; background: var(--cor-ok); border-radius: 999px; }

@@ -17,5 +17,6 @@ const CONFIG = {
   menu: [
     { texto: "Tarefas", href: "index.html" },
     { texto: "Projetos", href: "projetos.html" },
+    { texto: "Resumo", href: "resumo.html" },
   ],
 };
