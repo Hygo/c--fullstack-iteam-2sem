@@ -51,7 +51,9 @@ O **`nome`** de cada campo precisa ser **exatamente** o nome da chave no JSON da
 | `"select"` | lista de opções | `opcoes: [{valor: "gato", rotulo: "Gato"}, ...]` **ou** `opcoesDe: {recurso, valor, rotulo}` (busca na API) |
 | `"somenteLeitura"` | só aparece na tabela | ex.: `criado_em` |
 
-Opções que valem para qualquer campo: `obrigatorio: true` (mostra o `*` e avisa antes de enviar), `padrao: valor` (valor inicial do formulário), `largo: true` (ocupa a linha inteira).
+Opções que valem para qualquer campo: `obrigatorio: true` (mostra o `*` e avisa antes de enviar), `padrao: valor` (valor inicial do formulário), `largo: true` (ocupa a linha inteira) e `rotuloTabela: "Prioridade"` (título mais curto para a coluna da tabela quando o rótulo do formulário é comprido).
+
+Campos `somenteLeitura` que trazem data e hora do banco (`criado_em`) aparecem como `20/11/2026 14:42`.
 
 ### Lista fixa de opções (ex.: espécie do pet)
 

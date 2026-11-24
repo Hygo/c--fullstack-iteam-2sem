@@ -12,7 +12,8 @@
  *   "select"        lista de opções           (opções: opcoes: [{valor, rotulo}]
  *                                              ou opcoesDe: {recurso, valor, rotulo} para buscar na API)
  *   "somenteLeitura" aparece na tabela, mas não no formulário (ex.: data de criação)
- * Opções comuns: obrigatorio (true/false), padrao (valor inicial), largo (ocupa a linha toda).
+ * Opções comuns: obrigatorio (true/false), padrao (valor inicial), largo (ocupa a linha toda),
+ *   rotuloTabela (título mais curto para a coluna da tabela, quando o rótulo do formulário é longo).
  *
  * Opções do CONFIG:
  *   semEditar: true / semExcluir: true   escondem os botões da tabela quando a API ainda não tem PUT / DELETE.

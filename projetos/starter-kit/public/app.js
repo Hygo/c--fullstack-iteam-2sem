@@ -286,12 +286,18 @@ function formatar(campo, valor) {
     const [ano, mes, dia] = String(valor).slice(0, 10).split("-");
     return dia + "/" + mes + "/" + ano;
   }
+  // Data e hora que vêm do banco ("2026-11-20 14:42:50"), por exemplo em criado_em: mostra "20/11/2026 14:42".
+  const dataHora = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})(:\d{2})?$/.exec(String(valor));
+  if (dataHora) {
+    return dataHora[3] + "/" + dataHora[2] + "/" + dataHora[1] + " " + dataHora[4];
+  }
   return String(valor);
 }
 
 function construirCabecalho() {
   const linha = document.createElement("tr");
-  const colunas = ["ID", ...CONFIG.campos.map((c) => c.rotulo), "Ações"];
+  // rotuloTabela (opcional) é um título mais curto para a coluna, quando o rótulo do formulário é longo.
+  const colunas = ["ID", ...CONFIG.campos.map((c) => c.rotuloTabela || c.rotulo), "Ações"];
   for (const texto of colunas) {
     const th = document.createElement("th");
     th.textContent = texto;
