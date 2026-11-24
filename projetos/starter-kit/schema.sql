@@ -12,6 +12,10 @@
 -- Não troque o nome do banco sem avisar a equipe: o docker-compose.yml e o servidor usam "projeto_iteam"
 -- (variável MARIADB_DATABASE no compose e DB_NOME no servidor).
 
+-- Acentos: força o cliente que executa este arquivo a falar UTF-8. Sem isto, dados de exemplo como "Ciências"
+-- podem ser gravados com os caracteres trocados (aparece "CiÃªncias" na tela), dependendo do cliente usado.
+SET NAMES utf8mb4;
+
 CREATE DATABASE IF NOT EXISTS projeto_iteam
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;

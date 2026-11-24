@@ -195,6 +195,10 @@ Se o `schema.sql` tiver um erro de SQL, o banco não termina de ser criado (o co
 
 Os detalhes aparecem **no console do servidor**, não na resposta (não expomos detalhes internos a quem chama a API).
 
+### Acentos trocados ("CiÃªncias" em vez de "Ciências")
+
+Os dados de exemplo (`INSERT`) foram gravados com a codificação errada. O `schema.sql` do starter kit já começa com `SET NAMES utf8mb4;` justamente para evitar isso: **mantenha essa linha** no topo do seu arquivo. Se o problema aparecer, corrija o `schema.sql` e zere o banco (`down -v`, `up -d --wait`).
+
 ## 7. Exercícios
 
 1. Suba o banco do starter kit (`docker compose up -d --wait`) e rode, no terminal SQL do container ou no Adminer, um `SELECT` da tabela `recados`.
