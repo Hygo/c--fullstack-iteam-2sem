@@ -14,7 +14,7 @@ rem ----------------------------------------------------------------------------
 setlocal
 cd /d "%~dp0"
 
-set "FONTES=src\main.cpp src\banco.cpp src\recado_repositorio.cpp src\rotas_recados.cpp"
+set "FONTES=src\main.cpp src\banco.cpp src\recado_repositorio.cpp src\rotas_recados.cpp src\projeto_repositorio.cpp src\rotas_projetos.cpp"
 set "INC=-Ilibs -Isrc"
 set "LIB=-lmariadb"
 if defined MARIADB_DIR set "INC=%INC% -I"%MARIADB_DIR%\include" -I"%MARIADB_DIR%\include\mariadb""
