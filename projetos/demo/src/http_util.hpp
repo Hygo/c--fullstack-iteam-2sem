@@ -40,7 +40,7 @@ inline bool lerCorpoObjeto(const httplib::Request& req, httplib::Response& res, 
     return true;
 }
 
-// Lê o parâmetro de caminho ":id" (por exemplo, /api/recados/:id). Se for inválido, responde 400.
+// Lê o parâmetro de caminho ":id" (por exemplo, /api/tarefas/:id). Se for inválido, responde 400.
 inline bool lerId(const httplib::Request& req, httplib::Response& res, long long& id) {
     try {
         const std::string& texto = req.path_params.at("id");

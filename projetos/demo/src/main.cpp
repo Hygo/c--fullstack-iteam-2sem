@@ -15,7 +15,6 @@
 #include "config.hpp"
 #include "http_util.hpp"
 #include "rotas_projetos.hpp"
-#include "rotas_recados.hpp"
 #include "rotas_tarefas.hpp"
 // Quando criar as rotas do seu tema, inclua o cabeçalho aqui e registre abaixo.
 
@@ -64,8 +63,7 @@ int main(int argc, char* argv[]) {
         });
     });
 
-    // Rotas do exemplo (recados) e do demo: projetos.
-    registrarRotasRecados(servidor, config);
+    // Rotas do demo: projetos (apoio) e tarefas (principal).
     registrarRotasProjetos(servidor, config);
     registrarRotasTarefas(servidor, config);
 

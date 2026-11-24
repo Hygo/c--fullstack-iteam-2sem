@@ -31,17 +31,26 @@
  */
 
 const CONFIG = {
-  titulo: "Recados",
-  recurso: "recados", // usa as rotas /api/recados
+  titulo: "Tarefas",
+  recurso: "tarefas", // usa as rotas /api/tarefas
   campos: [
+    { nome: "projeto_id", rotulo: "Projeto", tipo: "select", obrigatorio: true,
+      opcoesDe: { recurso: "projetos", valor: "id", rotulo: "nome" } },
     { nome: "titulo", rotulo: "Título", tipo: "texto", obrigatorio: true, max: 100 },
-    { nome: "prioridade", rotulo: "Prioridade (1 a 5)", tipo: "numero", min: 1, max: 5, padrao: 1 },
-    { nome: "mensagem", rotulo: "Mensagem", tipo: "textarea", largo: true },
-    { nome: "criado_em", rotulo: "Criado em", tipo: "somenteLeitura" },
+    { nome: "status", rotulo: "Status", tipo: "select", padrao: "pendente",
+      opcoes: [
+        { valor: "pendente", rotulo: "Pendente" },
+        { valor: "andamento", rotulo: "Em andamento" },
+        { valor: "feito", rotulo: "Feito" },
+      ] },
+    { nome: "prioridade", rotulo: "Prioridade (1 = urgente, 5 = tranquila)", rotuloTabela: "Prioridade", tipo: "numero", min: 1, max: 5, padrao: 3 },
+    { nome: "prazo", rotulo: "Prazo", tipo: "data" },
+    { nome: "horas_estimadas", rotulo: "Horas estimadas", tipo: "decimal", min: 0, passo: 0.5, casas: 1 },
+    { nome: "descricao", rotulo: "Descrição", tipo: "textarea", largo: true },
+    { nome: "concluida_em", rotulo: "Concluída em", tipo: "somenteLeitura" },
   ],
-  // Opcional: links de navegação entre as telas do sistema.
-  // menu: [
-  //   { texto: "Recados", href: "index.html" },
-  //   { texto: "Outra tela", href: "outra.html" },
-  // ],
+  menu: [
+    { texto: "Tarefas", href: "index.html" },
+    { texto: "Projetos", href: "projetos.html" },
+  ],
 };
