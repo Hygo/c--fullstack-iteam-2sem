@@ -16,6 +16,7 @@
 #include "http_util.hpp"
 #include "rotas_projetos.hpp"
 #include "rotas_recados.hpp"
+#include "rotas_tarefas.hpp"
 // Quando criar as rotas do seu tema, inclua o cabeçalho aqui e registre abaixo.
 
 int main(int argc, char* argv[]) {
@@ -66,6 +67,7 @@ int main(int argc, char* argv[]) {
     // Rotas do exemplo (recados) e do demo: projetos.
     registrarRotasRecados(servidor, config);
     registrarRotasProjetos(servidor, config);
+    registrarRotasTarefas(servidor, config);
 
     // Qualquer exceção não tratada dentro de uma rota vira um 500 em JSON (e o servidor continua de pé).
     servidor.set_exception_handler(

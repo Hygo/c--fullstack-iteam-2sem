@@ -6,6 +6,7 @@
 
 #include "http_util.hpp"
 #include "projeto_repositorio.hpp"
+#include "validacao.hpp"
 
 using nlohmann::json;
 
@@ -14,20 +15,8 @@ namespace {
 // Confere os campos recebidos. Devolve uma lista de mensagens; vazia = tudo certo.
 json validarProjeto(const json& dados) {
     json erros = json::array();
-
-    if (!dados.contains("nome") || !dados["nome"].is_string() || dados["nome"].get<std::string>().empty()) {
-        erros.push_back("nome e obrigatorio");
-    } else if (dados["nome"].get<std::string>().size() > 80) {
-        erros.push_back("nome deve ter no maximo 80 caracteres");
-    }
-
-    if (dados.contains("descricao") && !dados["descricao"].is_null()) {
-        if (!dados["descricao"].is_string()) {
-            erros.push_back("descricao deve ser texto");
-        } else if (dados["descricao"].get<std::string>().size() > 255) {
-            erros.push_back("descricao deve ter no maximo 255 caracteres");
-        }
-    }
+    validacao::textoObrigatorio(dados, "nome", 80, erros);
+    validacao::textoOpcional(dados, "descricao", 255, erros);
     return erros;
 }
 
