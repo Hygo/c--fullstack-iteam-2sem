@@ -21,6 +21,8 @@
  *                                               (prontas: "linha-alerta" e "linha-apagada"; veja o estilo.css).
  *   acoesExtras: [{ rotulo, caminho: (registro) => "/api/.../acao", metodo: "POST", mensagem, mostrarSe: (registro) => bool }]
  *                                               botões extras na linha que chamam uma rota da API.
+ *   filtros: [{ nome: "status", rotulo: "Status", opcoes: [{valor, rotulo}] }  (ou opcoesDe: {recurso, valor, rotulo})]
+ *                                               listas de filtro ao lado da busca; cada uma envia ?nome=valor à API.
  * No campo "decimal" use casas: N para escolher quantas casas decimais aparecem na tabela (padrão 2).
  *
  * Várias telas: copie index.html para outro arquivo (ex.: autores.html), troque nele o

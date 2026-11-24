@@ -95,6 +95,7 @@ button:disabled { opacity: 0.6; cursor: wait; }
 .barra { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .busca { display: flex; gap: 0.4rem; }
 .busca input { min-width: 12rem; }
+.busca select { max-width: 14rem; }
 
 .rolagem { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; }

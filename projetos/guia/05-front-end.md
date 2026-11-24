@@ -96,9 +96,9 @@ O tema pede uma forma de cadastrar a entidade de apoio (autor, tutor, categoria)
 
 5. Se a API do apoio ainda não tem `PUT`/`DELETE`, esconda os botões com `semEditar: true` e/ou `semExcluir: true` no `config-autores.js`. (Melhor ainda: implemente as rotas!)
 
-### Destacar linhas e botões extras (opcional)
+### Destacar linhas, botões extras e filtros (opcional)
 
-Dois ganchos no `config.js` deixam a tabela mais útil sem mexer no `app.js`:
+Três ganchos no `config.js` deixam a tela mais útil sem mexer no `app.js`:
 
 ```js
 // 1) Pinta a linha com uma classe CSS (prontas no estilo.css: "linha-alerta" e "linha-apagada")
@@ -110,9 +110,16 @@ acoesExtras: [
     caminho: (r) => `/api/tarefas/${r.id}/concluir`,
     mostrarSe: (r) => r.status !== "feito" },
 ],
+
+// 3) Listas de filtro ao lado da busca: cada uma envia ?nome=valor (ex.: GET /api/tarefas?status=feito)
+filtros: [
+  { nome: "status", rotulo: "Status", opcoes: [{ valor: "pendente", rotulo: "Pendente" }, { valor: "feito", rotulo: "Feito" }] },
+  { nome: "projeto_id", rotulo: "Projeto", opcoesDe: { recurso: "projetos", valor: "id", rotulo: "nome" } },
+],
 ```
 
-O `metodo` é `POST` por padrão, e `mostrarSe` (opcional) esconde o botão nas linhas em que ele não faz sentido. Depois do clique, a tabela é recarregada sozinha.
+- `acoesExtras`: o `metodo` é `POST` por padrão, e `mostrarSe` (opcional) esconde o botão nas linhas em que ele não faz sentido. Depois do clique, a tabela é recarregada sozinha.
+- `filtros`: o navegador só **envia** o parâmetro; quem filtra de verdade é a API. Implemente o `?status=` / `?projeto_id=` no repositório (guia 04, receita de busca) e valide o valor recebido.
 
 ## 4. Como o `app.js` fala com a API
 

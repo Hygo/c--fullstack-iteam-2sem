@@ -160,6 +160,47 @@ function preencherSelect(campo) {
   }
 }
 
+/* ------------------------------------ filtros ------------------------------------ */
+
+// Se o config.js tiver "filtros", cria uma lista de escolha para cada um, ao lado da busca.
+function construirFiltros() {
+  for (const filtro of CONFIG.filtros || []) {
+    const select = document.createElement("select");
+    select.id = "filtro-" + filtro.nome;
+    select.setAttribute("aria-label", "Filtrar por " + filtro.rotulo);
+    select.addEventListener("change", carregar);
+    el.formBusca.insertBefore(select, el.busca);
+    preencherFiltro(filtro, []);
+  }
+}
+
+function preencherFiltro(filtro, opcoes) {
+  const select = document.getElementById("filtro-" + filtro.nome);
+  select.textContent = "";
+  const todos = document.createElement("option");
+  todos.value = "";
+  todos.textContent = filtro.rotulo + ": todos";
+  select.appendChild(todos);
+  for (const opcao of opcoes) {
+    const item = document.createElement("option");
+    item.value = String(opcao.valor);
+    item.textContent = opcao.rotulo;
+    select.appendChild(item);
+  }
+}
+
+async function carregarFiltros() {
+  for (const filtro of CONFIG.filtros || []) {
+    let opcoes = filtro.opcoes || [];
+    if (filtro.opcoesDe) {
+      const origem = filtro.opcoesDe;
+      const itens = await api("GET", "/api/" + origem.recurso);
+      opcoes = itens.map((item) => ({ valor: item[origem.valor || "id"], rotulo: String(item[origem.rotulo]) }));
+    }
+    preencherFiltro(filtro, opcoes);
+  }
+}
+
 async function carregarOpcoes() {
   for (const campo of CONFIG.campos.filter((c) => c.tipo === "select")) {
     if (campo.opcoes) {
@@ -365,8 +406,15 @@ function desenharTabela(registros) {
 
 async function carregar() {
   try {
-    const url = termoBusca ? API + "?busca=" + encodeURIComponent(termoBusca) : API;
-    desenharTabela(await api("GET", url));
+    // Monta a consulta: ?busca=texto&status=feito (cada filtro escolhido vira um parâmetro; "todos" não envia nada).
+    const parametros = new URLSearchParams();
+    if (termoBusca) parametros.set("busca", termoBusca);
+    for (const filtro of CONFIG.filtros || []) {
+      const valor = document.getElementById("filtro-" + filtro.nome).value;
+      if (valor) parametros.set(filtro.nome, valor);
+    }
+    const consulta = parametros.toString();
+    desenharTabela(await api("GET", consulta ? API + "?" + consulta : API));
   } catch (erro) {
     mostrarAviso(erro.message, "erro");
   }
@@ -427,6 +475,7 @@ async function iniciar() {
 
   construirMenu();
   construirFormulario();
+  construirFiltros();
   construirCabecalho();
   reiniciarFormulario();
 
@@ -439,11 +488,15 @@ async function iniciar() {
   el.limparBusca.addEventListener("click", () => {
     el.busca.value = "";
     termoBusca = "";
+    for (const filtro of CONFIG.filtros || []) {
+      document.getElementById("filtro-" + filtro.nome).value = "";
+    }
     carregar();
   });
 
   try {
     await carregarOpcoes();
+    await carregarFiltros();
   } catch (erro) {
     mostrarAviso("Não foi possível carregar as opções das listas: " + erro.message, "erro");
   }
