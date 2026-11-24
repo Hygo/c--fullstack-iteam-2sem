@@ -14,8 +14,13 @@
  *   "somenteLeitura" aparece na tabela, mas não no formulário (ex.: data de criação)
  * Opções comuns: obrigatorio (true/false), padrao (valor inicial), largo (ocupa a linha toda).
  *
- * Opções do CONFIG: semEditar: true / semExcluir: true escondem os botões da tabela quando a API
- * ainda não tem a rota PUT / DELETE daquele recurso.
+ * Opções do CONFIG:
+ *   semEditar: true / semExcluir: true   escondem os botões da tabela quando a API ainda não tem PUT / DELETE.
+ *   classeLinha: (registro) => "linha-alerta"   devolve uma classe CSS para destacar a linha
+ *                                               (prontas: "linha-alerta" e "linha-apagada"; veja o estilo.css).
+ *   acoesExtras: [{ rotulo, caminho: (registro) => "/api/.../acao", metodo: "POST", mensagem, mostrarSe: (registro) => bool }]
+ *                                               botões extras na linha que chamam uma rota da API.
+ * No campo "decimal" use casas: N para escolher quantas casas decimais aparecem na tabela (padrão 2).
  *
  * Várias telas: copie index.html para outro arquivo (ex.: autores.html), troque nele o
  *   <script src="config.js"> por um novo arquivo de configuração (ex.: config-autores.js)

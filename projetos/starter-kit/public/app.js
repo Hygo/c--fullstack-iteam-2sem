@@ -279,7 +279,7 @@ function formatar(campo, valor) {
     const opcoes =
       campo.formato === "moeda"
         ? { style: "currency", currency: "BRL" }
-        : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        : { minimumFractionDigits: campo.casas ?? 2, maximumFractionDigits: campo.casas ?? 2 };
     return numero.toLocaleString("pt-BR", opcoes);
   }
   if (campo.tipo === "data") {
@@ -307,6 +307,11 @@ function desenharTabela(registros) {
 
   for (const registro of registros) {
     const linha = document.createElement("tr");
+    // classeLinha(registro) (no config.js) pode devolver uma classe CSS, ex.: "linha-alerta" ou "linha-apagada".
+    if (typeof CONFIG.classeLinha === "function") {
+      const classe = CONFIG.classeLinha(registro);
+      if (classe) linha.className = classe;
+    }
 
     const celulaId = document.createElement("td");
     celulaId.textContent = registro.id;
@@ -334,6 +339,16 @@ function desenharTabela(registros) {
     excluir.textContent = "Excluir";
     excluir.addEventListener("click", () => excluirRegistro(registro));
 
+    // acoesExtras (no config.js): botões a mais na linha, que chamam uma rota da API (ex.: "Concluir").
+    for (const acao of CONFIG.acoesExtras || []) {
+      if (typeof acao.mostrarSe === "function" && !acao.mostrarSe(registro)) continue;
+      const botao = document.createElement("button");
+      botao.type = "button";
+      botao.textContent = acao.rotulo;
+      botao.addEventListener("click", () => executarAcaoExtra(acao, registro));
+      celulaAcoes.appendChild(botao);
+    }
+
     // semEditar / semExcluir (no config.js) escondem os botões quando a API não tem essas rotas.
     if (!CONFIG.semEditar) celulaAcoes.appendChild(editar);
     if (!CONFIG.semExcluir) celulaAcoes.appendChild(excluir);
@@ -358,6 +373,16 @@ function iniciarEdicao(registro) {
   el.formulario.scrollIntoView({ behavior: "smooth", block: "center" });
   const primeiro = camposEditaveis()[0];
   if (primeiro) document.getElementById("campo-" + primeiro.nome).focus();
+}
+
+async function executarAcaoExtra(acao, registro) {
+  try {
+    await api(acao.metodo || "POST", acao.caminho(registro));
+    mostrarAviso(acao.mensagem || "Ação executada.", "ok");
+    await carregar();
+  } catch (erro) {
+    mostrarAviso(erro.message, "erro");
+  }
 }
 
 async function excluirRegistro(registro) {
@@ -416,6 +441,7 @@ async function iniciar() {
   } catch (erro) {
     mostrarAviso("Não foi possível carregar as opções das listas: " + erro.message, "erro");
   }
+  reiniciarFormulario(); // de novo: agora que as listas têm opções, aplica o "padrao" dos campos select
   await carregar();
 }
 

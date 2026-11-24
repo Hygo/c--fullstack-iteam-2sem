@@ -104,6 +104,10 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 td.acoes-linha { white-space: nowrap; }
 td.acoes-linha button { padding: 0.3rem 0.7rem; font-size: 0.85rem; margin-right: 0.3rem; }
 
+/* Destaques de linha (usados por classeLinha no config.js) */
+tr.linha-alerta td { background: #fdecea; }
+tr.linha-apagada td { color: #7b8499; background: #f6f7fa; }
+
 .vazio { color: #66708a; text-align: center; margin: 1rem 0 0.2rem; }
 
 /* Mensagens */

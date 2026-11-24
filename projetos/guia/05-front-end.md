@@ -46,7 +46,7 @@ O **`nome`** de cada campo precisa ser **exatamente** o nome da chave no JSON da
 | `"texto"` | uma linha | `max` (tamanho) |
 | `"textarea"` | várias linhas | `max` |
 | `"numero"` | inteiro | `min`, `max` |
-| `"decimal"` | com casas decimais | `min`, `max`, `passo`, `formato: "moeda"` (mostra `R$ 18,90`) |
+| `"decimal"` | com casas decimais | `min`, `max`, `passo`, `formato: "moeda"` (mostra `R$ 18,90`), `casas: 1` (quantas casas na tabela; padrão 2) |
 | `"data"` | seletor de data | — (mostra `15/03/2021` na tabela) |
 | `"select"` | lista de opções | `opcoes: [{valor: "gato", rotulo: "Gato"}, ...]` **ou** `opcoesDe: {recurso, valor, rotulo}` (busca na API) |
 | `"somenteLeitura"` | só aparece na tabela | ex.: `criado_em` |
@@ -93,6 +93,24 @@ O tema pede uma forma de cadastrar a entidade de apoio (autor, tutor, categoria)
    ```
 
 5. Se a API do apoio ainda não tem `PUT`/`DELETE`, esconda os botões com `semEditar: true` e/ou `semExcluir: true` no `config-autores.js`. (Melhor ainda: implemente as rotas!)
+
+### Destacar linhas e botões extras (opcional)
+
+Dois ganchos no `config.js` deixam a tabela mais útil sem mexer no `app.js`:
+
+```js
+// 1) Pinta a linha com uma classe CSS (prontas no estilo.css: "linha-alerta" e "linha-apagada")
+classeLinha: (r) => r.status === "feito" ? "linha-apagada" : null,
+
+// 2) Botões a mais em cada linha, que chamam uma rota da API (ex.: POST /api/tarefas/3/concluir)
+acoesExtras: [
+  { rotulo: "Concluir", metodo: "POST", mensagem: "Tarefa concluída.",
+    caminho: (r) => `/api/tarefas/${r.id}/concluir`,
+    mostrarSe: (r) => r.status !== "feito" },
+],
+```
+
+O `metodo` é `POST` por padrão, e `mostrarSe` (opcional) esconde o botão nas linhas em que ele não faz sentido. Depois do clique, a tabela é recarregada sozinha.
 
 ## 4. Como o `app.js` fala com a API
 
