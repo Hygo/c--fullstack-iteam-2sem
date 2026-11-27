@@ -8,7 +8,7 @@ O repositório oficial do curso (`Hygo/c--fullstack-iteam-2sem`) é o **material
 
 - Uma conta no GitHub
 - [Git](https://git-scm.com/downloads) instalado (teste com `git --version`)
-- Um compilador C++ com suporte a C++17 (teste com `g++ --version`). O passo a passo de instalação (Windows com MSYS2, Linux e macOS) está em [PREPARAR-O-COMPILADOR.md](PREPARAR-O-COMPILADOR.md)
+- Um compilador C++ com suporte a C++17 (teste com `g++ --version`). O passo a passo de instalação (Windows com MSYS2, Linux e macOS) está em [unidade-01/INSTALACAO-DO-COMPILADOR.md](unidade-01/INSTALACAO-DO-COMPILADOR.md)
 - Um editor ou IDE (veja a unidade 1 da apostila), por exemplo o Visual Studio Code
 
 ## 1. Criar a sua cópia (só uma vez)

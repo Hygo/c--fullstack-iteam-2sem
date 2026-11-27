@@ -12,7 +12,7 @@ Professor: Msc. Hygo Sousa De Oliveira
 
 > Faça isto **antes de começar a resolver as atividades**.
 
-Faça as atividades na **sua própria cópia** do repositório do curso. Se ainda não criou a sua, siga o passo a passo de [COMO-OBTER-AS-ATIVIDADES.md](../COMO-OBTER-AS-ATIVIDADES.md).
+Faça as atividades na **sua própria cópia** do repositório do curso. Se ainda não criou a sua, siga o passo a passo de [COMO-OBTER-AS-ATIVIDADES.md](../COMO-OBTER-AS-ATIVIDADES.md). Se ainda não instalou o compilador, siga antes o [passo a passo de instalação](INSTALACAO-DO-COMPILADOR.md) (Windows com MSYS2, Linux e macOS).
 
 ### 1. Copie a pasta `base/` para `resolucao/`
 
@@ -80,7 +80,7 @@ Esta unidade tem **até 5 atividades por nível**. Cada atividade concluída som
 Todo projeto começa pelo ambiente. Aqui você prova que o seu compilador funciona e registra como chegou lá.
 
 **O que fazer:**
-1. Instale o compilador e confirme a versão com `g++ --version`.
+1. Instale o compilador (veja [INSTALACAO-DO-COMPILADOR.md](INSTALACAO-DO-COMPILADOR.md)) e confirme a versão com `g++ --version`.
 2. Complete o arquivo base para exibir, em linhas separadas: `Ola, mundo!`, o **seu nome completo** e a frase `C++: eficiencia com abstracao.`
 3. Compile com `-std=c++17 -Wall -Wextra` e execute o programa.
 4. No topo do arquivo, em comentário, registre: a saída de `g++ --version`, o comando de compilação que você usou e, em uma ou duas frases, a diferença entre **editor**, **compilador** e **IDE**.

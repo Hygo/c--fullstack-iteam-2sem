@@ -32,7 +32,7 @@ Todos os programas do curso usam **C++17** e devem ser compilados com avisos ati
 g++ -std=c++17 -Wall -Wextra programa.cpp -o programa.exe
 ```
 
-Verifique se o compilador está instalado com `g++ --version`. No Windows, recomendamos o **MSYS2 (UCRT64)**; o passo a passo (Windows, Linux e macOS) está em [PREPARAR-O-COMPILADOR.md](PREPARAR-O-COMPILADOR.md). No VS Code, o atalho **Ctrl+Shift+B** compila o arquivo aberto (tarefa já configurada em `.vscode/tasks.json`).
+Verifique se o compilador está instalado com `g++ --version`. No Windows, recomendamos o **MSYS2 (UCRT64)**; o passo a passo (Windows, Linux e macOS) está em [unidade-01/INSTALACAO-DO-COMPILADOR.md](unidade-01/INSTALACAO-DO-COMPILADOR.md). No VS Code, o atalho **Ctrl+Shift+B** compila o arquivo aberto (tarefa já configurada em `.vscode/tasks.json`).
 
 ## Cronograma sugerido (10 dias · 8 h por dia)
 

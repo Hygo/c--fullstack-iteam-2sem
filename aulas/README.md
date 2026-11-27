@@ -9,7 +9,7 @@ Slides das aulas em PDF. Esta pasta cresce aos poucos: cada aula só aparece aqu
 ## O que a Aula 1 cobre
 
 - **1.1 História e evolução do C++:** da linguagem *C with Classes* (1979) ao C++ (1983) e ao padrão C++17, que usamos no curso.
-- **1.2 Ambiente de desenvolvimento:** editor, compilador e depurador; como conferir a instalação (`g++ --version`) e compilar com `g++ -std=c++17 -Wall -Wextra main.cpp -o programa`.
+- **1.2 Ambiente de desenvolvimento:** editor, compilador e depurador; como conferir a instalação (`g++ --version`) e compilar com `g++ -std=c++17 -Wall -Wextra main.cpp -o programa`. O passo a passo de instalação está em [`unidade-01/INSTALACAO-DO-COMPILADOR.md`](../unidade-01/INSTALACAO-DO-COMPILADOR.md).
 - **1.3 Variáveis e identificadores:** declarar e inicializar (`int x{0};`), escolher o tipo adequado e usar os operadores (`=` atribui, `==` compara; `/` entre inteiros é divisão inteira).
 - **Exemplos 1 a 3:** primeiro programa completo, declaração e inicialização, expressões aritméticas.
 - **Atividades 1 a 3 (feitas em sala):** instalação e compilação, variáveis e tipos, operadores.
