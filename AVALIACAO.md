@@ -8,7 +8,7 @@ Professor: Msc. Hygo Sousa De Oliveira
 | Componente | Peso | Como é calculado |
 |------------|------|------------------|
 | Atividades das unidades 1 a 5 | **50%** | Média das 5 notas de unidade (cada uma de 0 a 10) |
-| Projeto final em equipe | **50%** | Rubrica do projeto, com ajuste individual (veja [`projetos/rubrica.md`](projetos/rubrica.md)) |
+| Projeto final em equipe | **50%** | Rubrica do projeto, com ajuste individual (a rubrica é publicada junto com a pasta `projetos/`) |
 
 **Nota final = 0,5 × (média das 5 unidades) + 0,5 × (nota do projeto)**
 
@@ -56,6 +56,6 @@ O código entregue deve ser **seu**. Conversar sobre o problema é bom, mas copi
 
 ## Projeto final
 
-- Equipes de 4 pessoas, 3 temas à escolha (veja [`projetos/`](projetos/)).
-- A rubrica, o ajuste individual por *commits* e perguntas, e o formato da apresentação estão em [`projetos/rubrica.md`](projetos/rubrica.md).
+- Equipes de 4 pessoas, 3 temas à escolha. O enunciado completo é publicado na pasta `projetos/` no fim da unidade 5.
+- A rubrica, o ajuste individual por *commits* e perguntas, e o formato da apresentação vêm junto com a pasta `projetos/`.
 - A entrega é a tag `projeto-final` na cópia da equipe e a apresentação no último dia.

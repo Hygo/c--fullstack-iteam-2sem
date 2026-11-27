@@ -13,3 +13,6 @@ unidade-*/base/*.log text eol=lf
 
 # Bibliotecas de terceiros: não poluir os diffs
 projetos/starter-kit/libs/** linguist-vendored
+
+# PDFs das aulas: nunca converter quebras de linha
+*.pdf  binary

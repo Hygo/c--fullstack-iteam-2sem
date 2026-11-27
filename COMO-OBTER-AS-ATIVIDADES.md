@@ -8,7 +8,7 @@ O repositório oficial do curso (`Hygo/c--fullstack-iteam-2sem`) é o **material
 
 - Uma conta no GitHub
 - [Git](https://git-scm.com/downloads) instalado (teste com `git --version`)
-- Um compilador C++ com suporte a C++17 (teste com `g++ --version`). No Windows, o passo a passo do MSYS2 está em [`projetos/guia/01-preparar-ambiente.md`](projetos/guia/01-preparar-ambiente.md)
+- Um compilador C++ com suporte a C++17 (teste com `g++ --version`). O passo a passo de instalação (Windows com MSYS2, Linux e macOS) está em [PREPARAR-O-COMPILADOR.md](PREPARAR-O-COMPILADOR.md)
 - Um editor ou IDE (veja a unidade 1 da apostila), por exemplo o Visual Studio Code
 
 ## 1. Criar a sua cópia (só uma vez)
@@ -60,7 +60,7 @@ Faça commits pequenos e frequentes. Eles mostram o seu processo, não só o res
 
 ## 5. Receber uma unidade nova
 
-As unidades são liberadas aos poucos. Quando o professor avisar que uma unidade foi liberada (exemplo com `unidade-02`):
+As unidades e as aulas são liberadas aos poucos. Quando o professor avisar que uma unidade foi liberada (exemplo com `unidade-02`):
 
 ```bash
 git fetch professor
@@ -71,6 +71,8 @@ git push origin main
 ```
 
 O `git checkout professor/main -- pasta` copia **somente aquela pasta** do professor para a sua cópia. O que você já fez nas outras pastas não é alterado.
+
+O mesmo vale para as aulas: `git checkout professor/main -- aulas` traz os slides novos (a pasta `aulas/` é só material de leitura; não há nada para resolver nela).
 
 > Atenção: se você já tiver alterado arquivos **dentro da pasta que está baixando**, eles serão sobrescritos pela versão do professor. É por isso que você resolve em `resolucao/` e não mexe em `base/`; mesmo assim, faça uma cópia do seu trabalho antes.
 
@@ -89,7 +91,9 @@ O `git checkout professor/main -- pasta` copia **somente aquela pasta** do profe
 
 ## 7. Projeto final em equipe (equipes de 4)
 
-O projeto fica na pasta [`projetos/`](projetos/). Em vez de uma cópia por aluno, a equipe usa **uma única cópia**:
+> Esta seção só vale depois que o professor liberar a pasta `projetos/` (previsto para o fim da unidade 5). Até lá, ela serve apenas para você saber como será.
+
+O projeto fica na pasta `projetos/`. Em vez de uma cópia por aluno, a equipe usa **uma única cópia**:
 
 1. **Um** integrante cria a cópia da equipe (passo 1), com o nome `cpp-fullstack-equipe-NOME` (troque `NOME` pelo nome da equipe).
 2. Esse integrante convida os outros três em *Settings → Collaborators* e convida também o usuário `Hygo`.
